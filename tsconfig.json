@@ -24,10 +24,6 @@
     "noUnusedLocals": true,
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
-    "importHelpers": true,
-    "paths": {
-      "@mod": ["src/mod"],
-      "@mod/*": ["src/mod/*"]
-    }
+    "importHelpers": true
   }
 }

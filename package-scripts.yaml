@@ -1,10 +1,6 @@
 scripts:
-  barrels:
-    script: barrelsby --config .barrelsby.json
-    hiddenFromHelp: true
-
   build:
-    script: nps clean barrels compile
+    script: nps clean compile
     description: Build project
 
   clean:
@@ -37,7 +33,7 @@ scripts:
       hiddenFromHelp: true
 
   precommit:
-    script: tsc && nps barrels && lint-staged
+    script: tsc && lint-staged
     hiddenFromHelp: true
 
   start:
