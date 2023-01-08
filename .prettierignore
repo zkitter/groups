@@ -12,3 +12,6 @@ coverage
 
 # JetBrains IDE
 .idea
+
+.graphqlconfig
+schema.graphql
