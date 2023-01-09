@@ -9,9 +9,9 @@ describe('getSpaces', () => {
 
     expect(spaces.length).toBeGreaterThan(0)
     expect(spaces.length).toBeLessThanOrEqual(SIZE)
-    spaces.forEach(({ followers, name }) => {
-      expect(followers).toBeGreaterThanOrEqual(MIN)
-      expect(name).toBeTruthy()
+    spaces.forEach(({ followers, id }) => {
+      expect(id).toBeDefined().toBeTruthy()
+      expect(followers).toBeGreaterThan(MIN)
     })
   })
 })

@@ -11,14 +11,18 @@ export const getSpaces =
   async () =>
     fetch(SNAPSHOT_API_URL).then(async (res) =>
       res.json().then((res) =>
-        Object.values(res.spaces as Space[])
-          .reduce<Space[]>((spaces, space) => {
-            // console.log(space)
-            if (filterSpaces(min)(space)) spaces.push(space)
+        Object.entries(res.spaces as Space[])
+          .reduce<Array<{ id: string; followers: number }>>(
+            (spaces, [id, space]) => {
+              if (filterSpaces(min)(space)) {
+                // @ts-expect-error - filterSpaces already ensures that props are defined
+                spaces.push({ followers: space.followers, id })
+              }
 
-            return spaces
-          }, [])
-          // @ts-expect-error - filterSpaces already ensures that props are defined
+              return spaces
+            },
+            [],
+          )
           .sort((a, b) => b.followers - a.followers)
           .slice(0, size),
       ),
