@@ -1,0 +1,7 @@
+query {
+  spaces(
+    where:{id_in: ["stgdao.eth", "ens.eth", "aave.eth", "uniswap"]}
+  ) {
+    github
+  }
+}

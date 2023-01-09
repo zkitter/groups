@@ -1,4 +1,4 @@
-import { SNAPSHOT_API_URL } from './constants'
+import { URLS } from './constants'
 import { Space } from './types'
 
 export const filterSpaces =
@@ -9,7 +9,7 @@ export const filterSpaces =
 export const getSpaces =
   ({ min = 10, size = 100 }: { min: number; size: number }) =>
   async () =>
-    fetch(SNAPSHOT_API_URL).then(async (res) =>
+    fetch(URLS.EXPLORE).then(async (res) =>
       res.json().then((res) =>
         Object.entries(res.spaces as Space[])
           .reduce<Array<{ id: string; followers: number }>>(
