@@ -12,3 +12,4 @@ coverage
 
 # JetBrains IDE
 .idea
+*.graphql
