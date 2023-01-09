@@ -4,6 +4,7 @@ import { ParserError, ResponseError } from './errors'
 import jsonParser from './json-parser'
 import { Space } from './types'
 
+//  based on https://github.com/monstasat/fp-fetch
 export function onSuccess(response: Response) {
   return tryCatch<Error, { spaces: Record<string, Space> }>(
     async () => jsonParser(response),
