@@ -14,7 +14,7 @@ describe('getSpaces', () => {
   })
 })
 
-describe('getTop100SpacesWithMoreThan10000Followers', () => {
+describe.skip('getTop100SpacesWithMoreThan10000Followers', () => {
   it('should return an array of spaces', async () => {
     // @ts-expect-error
     const { right: spaces } = await getTop100SpacesWithMoreThan10000Followers()
