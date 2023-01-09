@@ -45,5 +45,8 @@
   },
   "jest-runner-tsc": {
     "tsconfigPath": "./tsconfig.json"
+  },
+  "dependencies": {
+    "fp-ts": "^2.13.1"
   }
 }
