@@ -18,7 +18,7 @@ export const getSpaces =
             }
             return spaces
           }, [])
-          // @ts-expect-error
+          // @ts-expect-error - filterSpaces already ensures that props are defined
           .sort((a, b) => b.followers - a.followers)
           .slice(0, size),
       ),
