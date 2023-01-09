@@ -7,10 +7,10 @@ describe('getSpaces', () => {
 
     const spaces = await getSpaces({ min: MIN, size: SIZE })()
 
+    expect(spaces.length).toBeGreaterThan(0)
     expect(spaces.length).toBeLessThanOrEqual(SIZE)
-    spaces.forEach(({ followers, github, name }) => {
+    spaces.forEach(({ followers, name }) => {
       expect(followers).toBeGreaterThanOrEqual(MIN)
-      expect(github).toBeTruthy()
       expect(name).toBeTruthy()
     })
   })

@@ -3,8 +3,8 @@ import { Space } from './types'
 
 export const filterSpaces =
   (min: number) =>
-  ({ followers, github }: Space) =>
-    followers !== undefined && followers >= min && github !== undefined
+  ({ followers }: Space) =>
+    followers !== undefined && followers >= min
 
 export const getSpaces =
   ({ min = 10, size = 100 }: { min: number; size: number }) =>
@@ -13,9 +13,9 @@ export const getSpaces =
       res.json().then((res) =>
         Object.values(res.spaces as Space[])
           .reduce<Space[]>((spaces, space) => {
-            if (filterSpaces(min)(space)) {
-              spaces.push(space)
-            }
+            // console.log(space)
+            if (filterSpaces(min)(space)) spaces.push(space)
+
             return spaces
           }, [])
           // @ts-expect-error - filterSpaces already ensures that props are defined
