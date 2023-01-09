@@ -1,10 +1,11 @@
 import { pipe } from 'fp-ts/function'
-import * as TaskEither from 'fp-ts/TaskEither'
+import { chain, left, tryCatch } from 'fp-ts/TaskEither'
 import { ParserError, ResponseError } from './errors'
 import jsonParser from './json-parser'
+import { Space } from './types'
 
 export function onSuccess(response: Response) {
-  return TaskEither.tryCatch(
+  return tryCatch<Error, { spaces: Record<string, Space> }>(
     async () => jsonParser(response),
     (error) => new ParserError((error as Error).message),
   )
@@ -12,7 +13,7 @@ export function onSuccess(response: Response) {
 
 export function onFailure(response: Response) {
   return pipe(
-    TaskEither.tryCatch(
+    tryCatch(
       async () =>
         jsonParser(response).then(
           (body) =>
@@ -26,7 +27,7 @@ export function onFailure(response: Response) {
           new ParserError((error as Error).message),
         ),
     ),
-    TaskEither.chain((e) => TaskEither.left(e)),
+    chain((e) => left(e)),
   )
 }
 
