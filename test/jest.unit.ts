@@ -15,11 +15,10 @@ const jestUnitConfig: JestConfigWithTsJest = {
     },
   },
   displayName: 'unit',
-  moduleDirectories: ['node_modules', __dirname],
+  moduleDirectories: ['node_modules', '<rootDir>'],
   moduleFileExtensions: ['ts', 'js', 'json'],
-
   preset: 'ts-jest',
-  setupFilesAfterEnv: ['jest-chain', './test/setup.ts'],
+  setupFilesAfterEnv: ['jest-chain', 'jest-extended/all', './test/setup.ts'],
 }
 
 export default jestUnitConfig
