@@ -16,6 +16,10 @@ scripts:
       script: nps lint.fix format.fix
       hiddenFromHelp: Fix linting and formatting errors
 
+  fetch:
+    script: tsnd --cls --respawn --transpile-only scripts
+    description: Fetch query results (-m <min> -s <size>)
+
   format:
     default:
       script: nps 'test.once --selectProjects prettier --coverage false'
