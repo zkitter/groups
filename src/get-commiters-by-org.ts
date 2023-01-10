@@ -19,10 +19,7 @@ export const getCommittersByOrg = async (org: string) => {
     method: 'POST',
   })
 
-  const r = await res.json()
-  const repos = r.data.organization.repositories.nodes
-  // const repos = (await res.json()).data.organization.repositories.nodes
-  // console.log(repos)
+  const repos = (await res.json()).data.organization.repositories.nodes
 
   return [
     ...new Set(
