@@ -14,6 +14,7 @@
     "@r1oga/eslint-config": "^1.1.6",
     "@r1oga/prettier-config": "^1.1.8",
     "@types/jest": "^29.2.3",
+    "@types/node": "^18.11.18",
     "@types/yargs": "^17.0.19",
     "concurrently": "^7.6.0",
     "husky": "^8.0.2",

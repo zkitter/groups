@@ -9,7 +9,7 @@ export const filterSpaces =
 export const getSpaces =
   ({ min = 10, size = 100 }: { min: number; size: number }) =>
   async () =>
-    fetch(URLS.EXPLORE).then(async (res) =>
+    fetch(URLS.SNAPSHOT_EXPLORE).then(async (res) =>
       res.json().then((res) =>
         Object.entries(res.spaces as Space[])
           .reduce<Array<{ id: string; followers: number }>>(
