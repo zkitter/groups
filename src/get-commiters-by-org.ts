@@ -1,11 +1,9 @@
+import { ok } from 'assert'
 import { URLS } from './constants'
 import committersQuery from './graphql/committers-query'
 
-const GH_PAT = process.env
-if (GH_PAT === undefined) throw new Error('GH_PAT is not defined')
-
-// const pickLogin : ()
 export const getCommittersByOrg = async (org: string) => {
+  ok(process.env.GH_PAT, 'GH_PAT is not defined')
   const res = await fetch(URLS.GH_SQL, {
     body: JSON.stringify({
       query: committersQuery,
