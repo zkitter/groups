@@ -46,6 +46,7 @@ jobs:
       - name: Test
         env:
           GH_PAT: ${{ secrets.GITHUB_TOKEN }}
+          TZ: UTC
         run: pnpm run nps t.ci
 
       - name: Coveralls
