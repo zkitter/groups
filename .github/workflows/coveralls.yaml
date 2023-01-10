@@ -44,6 +44,8 @@ jobs:
         run: pnpm i --ignore-scripts --reporter=silent
 
       - name: Test
+        env:
+          GH_PAT: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm run nps t.ci
 
       - name: Coveralls
