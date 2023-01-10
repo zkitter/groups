@@ -2,12 +2,23 @@ import { getCommittersByOrg } from '../../src/get-commiters-by-org'
 
 describe('getCommitters', () => {
   it('should return a list of committers', async () => {
-    const committers = await getCommittersByOrg('uniswap')
+    const ORG = 'uniswap'
+    const SINCE = new Date('2022-12-01')
+    const UNTIL = new Date('2023-01-01')
+
+    const committers = await getCommittersByOrg({
+      org: ORG,
+      since: SINCE,
+      until: UNTIL,
+    })
 
     expect(committers.length).toBeGreaterThan(0)
-    committers.forEach((committer) => {
-      expect(typeof committer).toBe('string')
-      expect(committer).toBeTruthy()
+    committers.forEach(({ date, user }) => {
+      expect(typeof user).toBe('string')
+      expect(user).toBeTruthy()
+      expect(typeof date).toBe('string')
+      expect(new Date(date).getTime()).toBeGreaterThan(SINCE.getTime())
+      expect(new Date(date).getTime()).toBeLessThan(UNTIL.getTime())
     })
   })
 })

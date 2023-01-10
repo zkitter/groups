@@ -1,5 +1,5 @@
 export default `
-query orgs($login: String!) {
+query orgs($login: String!, $since: GitTimestamp!, $until: GitTimestamp!) {
     organization(login: $login) {
         repositories(first: 100) {
             nodes {
@@ -8,8 +8,9 @@ query orgs($login: String!) {
                     name
                     target {
                         ... on Commit {
-                            history(since: "2023-01-01T00:00:00Z") {
+                            history(since: $since, until: $until) {
                                 nodes {
+                                    committedDate
                                     author {
                                         user {
                                           login
