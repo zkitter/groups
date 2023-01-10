@@ -30,6 +30,8 @@ const jestLintConfig: JestConfigWithTsJest = {
   testPathIgnorePatterns: [
     '<rootDir>/pnpm-lock.yaml',
     '<rootDir>/test/coverage',
+    '<rootDir>/src/graphql/*.graphql',
+    '<rootDir>/src/graphql/.graphqlconfig',
   ],
 }
 

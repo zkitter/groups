@@ -1,3 +1,4 @@
+import { URLS } from './constants'
 import { getSpaces } from './get-spaces'
 import spacesGqlQuery from './graphql/spaces-gql-query'
 
@@ -10,7 +11,7 @@ export const getGhOrgs = async ({
 }): Promise<string[]> => {
   const spacesIds = (await getSpaces({ min, size })()).map(({ id }) => id)
 
-  const res = await fetch('https://hub.snapshot.org/graphql', {
+  const res = await fetch(URLS.SNAPSHOT_GQL, {
     body: JSON.stringify({
       operationName: 'Spaces',
       query: spacesGqlQuery,
