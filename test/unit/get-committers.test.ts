@@ -13,12 +13,9 @@ describe('getCommitters', () => {
     })
 
     expect(committers.length).toBeGreaterThan(0)
-    committers.forEach(({ date, user }) => {
+    committers.forEach((user) => {
       expect(typeof user).toBe('string')
       expect(user).toBeTruthy()
-      expect(typeof date).toBe('string')
-      expect(new Date(date).getTime()).toBeGreaterThan(SINCE.getTime())
-      expect(new Date(date).getTime()).toBeLessThan(UNTIL.getTime())
     })
   })
 })
