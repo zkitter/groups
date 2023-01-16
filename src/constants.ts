@@ -5,3 +5,5 @@ export const URLS = {
   SNAPSHOT_EXPLORE: `${BASE_URL}/api/explore`,
   SNAPSHOT_GQL: `${BASE_URL}/graphql`,
 }
+
+export const CHUNK_SIZE = 20

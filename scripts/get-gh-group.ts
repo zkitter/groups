@@ -2,7 +2,7 @@ import { getGhGroup } from '../src'
 
 const main = async () => {
   const ghGroup = await getGhGroup()
-  console.log(ghGroup)
+  console.log({ ghGroup })
 }
 
 main()

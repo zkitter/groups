@@ -27,7 +27,7 @@ const main = async () => {
     maxOrgs: argv.maxOrgs,
     minFollowers: argv.minFollowers,
   })()
-  console.log(spaces)
+  console.log({ spaces })
 }
 
 main()
