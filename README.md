@@ -10,7 +10,7 @@ Under the hood, it:
 
 ## Usage
 
-You need to have a GH Personal Access Token (scopes: ) defined as environment variables.
+You need to have a GH Personal Access Token (scopes: `public_repo`, `read:user`) defined as environment variables.
 
 ### Scripts
 
