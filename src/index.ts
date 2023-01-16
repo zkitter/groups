@@ -1,1 +1,1 @@
-export * from './get-spaces'
+export * from './get-gh-group'
