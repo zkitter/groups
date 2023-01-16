@@ -17,8 +17,12 @@ scripts:
       hiddenFromHelp: Fix linting and formatting errors
 
   fetch:
-    script: tsnd --cls --respawn --transpile-only scripts
-    description: Fetch query results (-m <min> -s <size>)
+    spaces:
+      script: tsnd --cls --transpile-only scripts/get-spaces.ts
+      description: Fetch query results (-m <min> -s <size>)
+    ghgroup:
+      script: tsnd --cls --transpile-only scripts/get-gh-group.ts
+      description: Fetch GH group members
 
   format:
     default:

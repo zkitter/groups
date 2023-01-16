@@ -11,7 +11,7 @@ export const getGhGroup = async (
     since,
     until = new Date(),
   }: {
-    maxOrgs: number
+    maxOrgs?: number
     minFollowers?: number
     since?: Date
     until?: Date
