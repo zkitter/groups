@@ -2,16 +2,19 @@ import { get100TopDaosWithMin10kFollowers, getSpaces } from '../../src'
 
 describe('getSpaces', () => {
   it('should return an array of spaces', async () => {
-    const MIN = 20_000
-    const SIZE = 50
+    const MIN_FOLLOWERS = 20_000
+    const MAX_ORGS = 50
 
-    const spaces = await getSpaces({ min: MIN, size: SIZE })()
+    const spaces = await getSpaces({
+      maxOrgs: MAX_ORGS,
+      minFollowers: MIN_FOLLOWERS,
+    })()
 
     expect(spaces.length).toBeGreaterThan(0)
-    expect(spaces.length).toBeLessThanOrEqual(SIZE)
+    expect(spaces.length).toBeLessThanOrEqual(MAX_ORGS)
     spaces.forEach(({ followers, id }) => {
       expect(id).toBeDefined().toBeTruthy()
-      expect(followers).toBeGreaterThan(MIN)
+      expect(followers).toBeGreaterThan(MIN_FOLLOWERS)
     })
   })
 })

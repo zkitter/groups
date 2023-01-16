@@ -2,14 +2,18 @@ import { URLS } from './constants'
 import { getSpaces } from './get-spaces'
 import spacesGqlQuery from './graphql/spaces-gql-query'
 
-export const getGhOrgs = async ({
-  min,
-  size,
-}: {
-  min: number
-  size: number
-}): Promise<string[]> => {
-  const spacesIds = (await getSpaces({ min, size })()).map(({ id }) => id)
+export const getGhOrgs = async (
+  {
+    maxOrgs = 100,
+    minFollowers = 10_000,
+  }: {
+    minFollowers: number
+    maxOrgs: number
+  } = { maxOrgs: 100, minFollowers: 10_000 },
+): Promise<string[]> => {
+  const spacesIds = (await getSpaces({ maxOrgs, minFollowers })()).map(
+    ({ id }) => id,
+  )
 
   const res = await fetch(URLS.SNAPSHOT_GQL, {
     body: JSON.stringify({

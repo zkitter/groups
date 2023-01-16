@@ -2,6 +2,8 @@ import { ok } from 'assert'
 import { URLS } from './constants'
 import committersQuery from './graphql/committers-query'
 
+const parseDate = (date: Date) => date.toISOString().split('.')[0] + 'Z'
+
 export const getCommittersByOrg = async ({
   org,
   since,
@@ -11,14 +13,15 @@ export const getCommittersByOrg = async ({
   since: Date
   until: Date
 }) => {
+  // console.log(parseDate(since), parseDate(until))
   ok(process.env.GH_PAT, 'GH_PAT is not defined')
   const res = await fetch(URLS.GH_SQL, {
     body: JSON.stringify({
       query: committersQuery,
       variables: {
         login: org,
-        since: since.toISOString(),
-        until: until.toISOString(),
+        since: parseDate(since),
+        until: parseDate(until),
       },
     }),
     headers: {
@@ -34,14 +37,17 @@ export const getCommittersByOrg = async ({
   return [
     ...new Set(
       (repos as any[])
-        .reduce<Array<{ date: string; user: string }>>((repos, repo) => {
+        .reduce<string[][]>((repos, repo) => {
           // console.log(repo)
           if (repo.defaultBranchRef !== null) {
             repos.push(
-              repo.defaultBranchRef.target.history.nodes.map((node: any) => ({
-                date: node.committedDate,
-                user: node.author.user.login,
-              })),
+              (repo.defaultBranchRef.target.history.nodes as any[]).reduce<
+                string[]
+              >((users, node) => {
+                const login: string = node.author.user?.login
+                if (login !== undefined) users.push(login)
+                return users
+              }, []),
             )
           }
           return repos
