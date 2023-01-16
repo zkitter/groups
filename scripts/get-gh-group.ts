@@ -1,8 +1,9 @@
 import { getGhGroup } from '../src'
 
 const main = async () => {
+  console.log('Fetching gh group (top 100 DAOs with >= 10_000 followers)...')
   const ghGroup = await getGhGroup()
-  console.log({ ghGroup })
+  console.log(`Fetched gh group of size: ${ghGroup.length}`, ghGroup)
 }
 
 main()
