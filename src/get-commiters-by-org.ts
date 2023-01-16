@@ -13,7 +13,6 @@ export const getCommittersByOrg = async ({
   since: Date
   until: Date
 }) => {
-  // console.log(parseDate(since), parseDate(until))
   ok(process.env.GH_PAT, 'GH_PAT is not defined')
   const res = await fetch(URLS.GH_SQL, {
     body: JSON.stringify({
@@ -31,8 +30,9 @@ export const getCommittersByOrg = async ({
     },
     method: 'POST',
   })
+  const repos = (await res.json()).data?.organization?.repositories?.nodes
 
-  const repos = (await res.json()).data.organization.repositories.nodes
+  if (repos === undefined) return []
 
   return [
     ...new Set(

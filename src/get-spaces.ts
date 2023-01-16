@@ -10,7 +10,7 @@ export const getSpaces =
   (
     {
       maxOrgs = 100,
-      minFollowers = 10,
+      minFollowers = 10_000,
     }: { minFollowers: number; maxOrgs: number } = {
       maxOrgs: 100,
       minFollowers: 10_000,
