@@ -1,4 +1,4 @@
-import { getCommittersByOrg } from '../../src/get-commiters-by-org'
+import { getCommittersByOrg } from 'gh/get-commiters-by-org'
 
 describe('getCommitters', () => {
   it('should return a list of committers', async () => {

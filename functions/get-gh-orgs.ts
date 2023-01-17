@@ -1,7 +1,7 @@
 import 'cross-fetch/polyfill'
 import { Request, Response } from 'express'
 
-import { getGhOrgs } from '../src/get-gh-orgs'
+import { getGhOrgs } from 'snapshot/get-gh-orgs'
 
 export default async (_: Request, res: Response) => {
   try {

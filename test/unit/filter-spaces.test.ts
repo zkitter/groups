@@ -1,4 +1,4 @@
-import { filterSpaces } from '../../src/get-spaces'
+import { filterSpaces } from 'snapshot/get-spaces'
 
 describe('filterSpaces', () => {
   it('should return true if followers is greater than min', () => {

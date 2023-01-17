@@ -1,1 +1,7 @@
 extends: ['@r1oga']
+overrides:
+  - files: ['scripts/*.ts']
+    rules:
+      no-console: off
+      '@typescript-eslint/restrict-template-expressions': off
+      '@typescript-eslint/ban-ts-comment': off

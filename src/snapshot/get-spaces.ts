@@ -1,5 +1,5 @@
-import { URLS } from './constants'
-import { Space } from './types'
+import { URLS } from '../constants'
+import { Space } from '../types'
 
 export const filterSpaces =
   (minFollowers: number) =>

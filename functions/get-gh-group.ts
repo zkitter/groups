@@ -1,7 +1,7 @@
 import 'cross-fetch/polyfill'
 import { Request, Response } from 'express'
 
-import { getGhGroup } from '../src'
+import { getGhGroup } from 'gh/get-gh-group'
 
 export default async (_: Request, res: Response) => {
   try {

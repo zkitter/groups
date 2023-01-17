@@ -1,5 +1,5 @@
+import { getGhOrgs } from 'snapshot/get-gh-orgs'
 import { getCommittersByOrg } from './get-commiters-by-org'
-import { getGhOrgs } from './get-gh-orgs'
 
 const minusOneMonth = (date: Date) =>
   new Date(new Date().setMonth(date.getMonth() - 1))

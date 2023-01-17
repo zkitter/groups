@@ -1,6 +1,4 @@
-import { getGhGroup } from '../../src/get-gh-group'
-
-jest.setTimeout(20_000)
+import { getGhGroup } from 'gh/get-gh-group'
 
 describe('getGhGroup', () => {
   it('should return a list of users', async () => {
@@ -12,6 +10,7 @@ describe('getGhGroup', () => {
       expect(user.includes('[bot]')).toBeFalsy()
     })
     // no duplicates
+    // eslint-disable-next-line @typescript-eslint/require-array-sort-compare
     expect(Array.from(new Set(users)).sort()).toEqual(users.sort())
   })
 })

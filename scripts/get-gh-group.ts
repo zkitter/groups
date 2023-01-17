@@ -1,4 +1,4 @@
-import { getGhGroup } from '../src'
+import { getGhGroup } from 'gh/get-gh-group'
 
 const main = async () => {
   console.log('Fetching gh group (top 100 DAOs with >= 10_000 followers)...')
