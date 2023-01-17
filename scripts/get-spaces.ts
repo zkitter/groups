@@ -1,7 +1,7 @@
 import { hideBin } from 'yargs/helpers'
 import yargs from 'yargs/yargs'
 
-import { getSpaces } from '../src/get-spaces'
+import { getSpaces } from 'snapshot/get-spaces'
 
 const options = {
   maxOrgs: {

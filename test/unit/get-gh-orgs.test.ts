@@ -1,4 +1,4 @@
-import { getGhOrgs } from '../../src/get-gh-orgs'
+import { getGhOrgs } from '../../src/snapshot/get-gh-orgs'
 
 describe('get-gh-orgs', () => {
   it('should return an array of github orgs', async () => {

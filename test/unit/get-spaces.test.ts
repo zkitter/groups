@@ -1,7 +1,7 @@
 import {
   get100TopDaosWithMin10kFollowers,
   getSpaces,
-} from '../../src/get-spaces'
+} from '../../src/snapshot/get-spaces'
 
 describe('getSpaces', () => {
   it('should return an array of spaces', async () => {

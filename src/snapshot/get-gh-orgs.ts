@@ -1,6 +1,6 @@
-import { CHUNK_SIZE, URLS } from './constants'
+import spacesGqlQuery from 'graphql/spaces-gql-query'
+import { CHUNK_SIZE, URLS } from '../constants'
 import { getSpaces } from './get-spaces'
-import spacesGqlQuery from './graphql/spaces-gql-query'
 
 const split = (arr: string[]) => {
   const chunks = []

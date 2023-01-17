@@ -1,6 +1,6 @@
 import { ok } from 'assert'
-import { URLS } from './constants'
-import committersQuery from './graphql/committers-query'
+import committersQuery from 'graphql/committers-query'
+import { URLS } from '../constants'
 
 const parseDate = (date: Date) => date.toISOString().split('.')[0] + 'Z'
 
