@@ -1,0 +1,17 @@
+query {
+  votes (
+    where: {
+      created_gte: 1671401738
+      space_in: ["stgdao.eth", "ens.eth", "aave.eth", "uniswap"]
+      vp_state: "final"
+    }
+    orderBy: "created",
+    orderDirection: desc
+  ) {
+    voter
+    created
+    space {
+      id
+    }
+  }
+}
