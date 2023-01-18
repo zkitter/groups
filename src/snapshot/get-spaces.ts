@@ -1,5 +1,5 @@
+import { Space } from 'types'
 import { URLS } from '../constants'
-import { Space } from '../types'
 
 export const filterSpaces =
   (minFollowers: number) =>
@@ -34,6 +34,7 @@ export const getSpaces =
       )
       .sort((a, b) => b.followers - a.followers)
       .slice(0, maxOrgs)
+      .map(({ id }) => id)
   }
 
 export const get100TopDaosWithMin10kFollowers = getSpaces()
