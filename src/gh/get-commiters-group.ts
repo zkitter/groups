@@ -4,7 +4,7 @@ import { getCommittersByOrg } from './get-commiters-by-org'
 const minusOneMonth = (date: Date) =>
   new Date(new Date().setMonth(date.getMonth() - 1))
 
-export const getGhGroup = async (
+export const getCommitersGroup = async (
   {
     maxOrgs = 100,
     minFollowers = 10_000,

@@ -1,8 +1,8 @@
-import { getGhGroup } from 'gh/get-gh-group'
+import { getCommitersGroup } from 'gh/get-commiters-group'
 
 const main = async () => {
   console.log('Fetching gh group (top 100 DAOs with >= 10_000 followers)...')
-  const ghGroup = await getGhGroup()
+  const ghGroup = await getCommitersGroup()
   console.log(`Fetched gh group of size: ${ghGroup.length}`, ghGroup)
 }
 
