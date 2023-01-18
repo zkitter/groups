@@ -1,6 +1,6 @@
-import { getCommittersByOrg } from 'gh/get-commiters-by-org'
+import { getCommittersByOrg } from 'gh/get-committers-by-org'
 
-describe('getCommitters', () => {
+describe('getCommittersByOrg', () => {
   it('should return a list of committers', async () => {
     const ORG = 'uniswap'
     const SINCE = new Date('2022-12-01')

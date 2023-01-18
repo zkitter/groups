@@ -15,9 +15,8 @@ describe('getSpaces', () => {
 
     expect(spaces.length).toBeGreaterThan(0)
     expect(spaces.length).toBeLessThanOrEqual(MAX_ORGS)
-    spaces.forEach(({ followers, id }) => {
+    spaces.forEach((id) => {
       expect(id).toBeDefined().toBeTruthy()
-      expect(followers).toBeGreaterThan(MIN_FOLLOWERS)
     })
   })
 })
@@ -27,8 +26,8 @@ describe('getTop100DaosWithMin10kFollowers', () => {
     const spaces = await get100TopDaosWithMin10kFollowers()
 
     expect(spaces.length).toBeLessThanOrEqual(100)
-    spaces.forEach(({ followers }) => {
-      expect(followers).toBeGreaterThanOrEqual(10_000)
+    spaces.forEach((id) => {
+      expect(id).toBeDefined().toBeTruthy()
     })
   })
 })

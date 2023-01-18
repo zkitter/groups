@@ -1,8 +1,8 @@
-import { getGhGroup } from 'gh/get-gh-group'
+import { getCommittersGroup } from 'gh/get-committers-group'
 
-describe('getGhGroup', () => {
+describe('getCommittersGroup', () => {
   it('should return a list of users', async () => {
-    const users = await getGhGroup({ maxOrgs: 5, minFollowers: 10_000 })
+    const users = await getCommittersGroup({ maxOrgs: 5, minFollowers: 10_000 })
     expect(users.length).toBeGreaterThan(0)
     users.forEach((user) => {
       expect(typeof user).toBe('string')

@@ -40,9 +40,7 @@ export const getGhOrgs = async (
     maxOrgs: number
   } = { maxOrgs: 100, minFollowers: 10_000 },
 ): Promise<string[]> => {
-  const spacesIds = (await getSpaces({ maxOrgs, minFollowers })()).map(
-    ({ id }) => id,
-  )
+  const spacesIds = await getSpaces({ maxOrgs, minFollowers })()
 
   const result = new Set<string>()
 
