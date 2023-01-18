@@ -1,8 +1,8 @@
 import { getGhOrgs } from 'snapshot/get-gh-orgs'
 import { minusOneMonth } from 'utils'
-import { getCommittersByOrg } from './get-commiters-by-org'
+import { getCommittersByOrg } from './get-committers-by-org'
 
-export const getCommitersGroup = async (
+export const getCommittersGroup = async (
   {
     maxOrgs = 100,
     minFollowers = 10_000,

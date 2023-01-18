@@ -20,7 +20,7 @@ You need to have a GH Personal Access Token (scopes: `public_repo`, `read:user`)
 ### Node
 
 ```
-import { getCommitersGroup } from './src/gh/get-commiters-group'
+import { getCommittersGroup } from './src/gh/get-commiters-group'
 
-const group = await getCommitersGroup()
+const group = await getCommittersGroup()
 ```

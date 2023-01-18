@@ -21,7 +21,7 @@ scripts:
       script: tsnd --cls --transpile-only scripts/get-spaces.ts
       description: Fetch query results (-m <min> -s <size>)
     ghgroup:
-      script: tsnd --cls --transpile-only scripts/get-commiters-group.ts
+      script: tsnd --cls --transpile-only scripts/get-committers-group.ts
       description: Fetch GH group members
 
   format:
