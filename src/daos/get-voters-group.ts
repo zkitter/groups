@@ -1,5 +1,5 @@
 import votersGqlQuery from 'graphql/voters-gql-query'
-import { getTime, minusOneMonth } from 'utils'
+import { ArraySet, getTime, minusOneMonth } from 'utils'
 import { URLS } from '../constants'
 import { getSpaces } from '../snapshot/get-spaces'
 
@@ -33,6 +33,9 @@ export const getVotersGroup = async (
     method: 'POST',
   })
 
-  const { votes } = await res.json()
-  return (votes as Array<{ voter: string }>).map(({ voter }) => voter)
+  const { data } = await res.json()
+  const voters = (data.votes as Array<{ voter: string }>).map(
+    ({ voter }) => voter,
+  )
+  return ArraySet(voters)
 }
