@@ -1,8 +1,6 @@
 import { getGhOrgs } from 'snapshot/get-gh-orgs'
+import { minusOneMonth } from 'utils'
 import { getCommittersByOrg } from './get-commiters-by-org'
-
-const minusOneMonth = (date: Date) =>
-  new Date(new Date().setMonth(date.getMonth() - 1))
 
 export const getCommitersGroup = async (
   {

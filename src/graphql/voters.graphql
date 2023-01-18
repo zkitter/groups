@@ -1,7 +1,8 @@
 query {
   votes (
     where: {
-      created_gte: 1671401738
+      created_gte: 1672000000
+      created_lte: 1674000000
       space_in: ["stgdao.eth", "ens.eth", "aave.eth", "uniswap"]
       vp_state: "final"
     }
@@ -9,9 +10,5 @@ query {
     orderDirection: desc
   ) {
     voter
-    created
-    space {
-      id
-    }
   }
 }
