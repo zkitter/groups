@@ -1,13 +1,14 @@
 import { Request, Response } from 'express'
-import { ValidationChain, validationResult } from 'express-validator'
+import { body, validationResult } from 'express-validator'
 
-export const validate = (validations: ValidationChain[]) => {
-  return async (req: Request, res: Response) => {
-    await Promise.all(
-      validations.map(async (validation) => validation.run(req)),
-    )
+const validations = [
+  body('maxOrgs').if(body('maxOrgs').exists()).isInt(),
+  body('minFollowers').if(body('minFollowers').exists()).isInt(),
+  body('since').if(body('since').exists()).isDate(),
+  body('until').if(body('until').exists()).isDate(),
+]
 
-    const errors = validationResult(req)
-    if (!errors.isEmpty()) res.status(400).json({ errors: errors.array() })
-  }
+export const validate = async (req: Request, res: Response) => {
+  await Promise.all(validations.map(async (validation) => validation.run(req)))
+  return validationResult(req)
 }

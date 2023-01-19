@@ -1,12 +1,12 @@
 import { Request, Response } from 'express'
-import { ValidationChain } from 'express-validator'
 import { validate } from './validate'
 
 export const Handler =
-  (fetchFn: (arg0: any) => any, validations: ValidationChain[]) =>
-  async (req: Request, res: Response) => {
+  (fetchFn: (arg0: any) => any) => async (req: Request, res: Response) => {
     try {
-      await validate(validations)(req, res)
+      const errors = await validate(req, res)
+      if (!errors.isEmpty())
+        return res.status(400).json({ errors: errors.array() })
       const data = await fetchFn(req.body)
       res.status(200).json(data)
     } catch (err) {
