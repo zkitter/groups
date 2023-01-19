@@ -5,3 +5,9 @@ overrides:
       no-console: off
       '@typescript-eslint/restrict-template-expressions': off
       '@typescript-eslint/ban-ts-comment': off
+  - files: ['test/integration/*.ts']
+    rules:
+      'jest/expect-expect': off
+  - files: ['src/handlers/validate.ts']
+    rules:
+      '@typescript-eslint/strict-boolean-expressions': off
