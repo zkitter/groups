@@ -1,5 +1,5 @@
 import { getGhOrgs } from 'snapshot/get-gh-orgs'
-import { minusOneMonth } from 'utils'
+import { ArraySet, minusOneMonth, notBot } from 'utils'
 import { getCommittersByOrg } from './get-committers-by-org'
 
 export const getCommittersGroup = async (
@@ -24,5 +24,5 @@ export const getCommittersGroup = async (
       return getCommittersByOrg({ org, since, until })
     }),
   )
-  return [...new Set(users.flat())].filter((user) => !user.includes('[bot]'))
+  return ArraySet(users.flat()).filter(notBot)
 }

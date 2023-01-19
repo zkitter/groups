@@ -1,6 +1,7 @@
 import { ok } from 'assert'
 import committersQuery from 'graphql/committers-query'
 import { URLS } from '../constants'
+import { ArraySet } from '../utils'
 
 const parseDate = (date: Date) => date.toISOString().split('.')[0] + 'Z'
 
@@ -34,25 +35,22 @@ export const getCommittersByOrg = async ({
 
   if (repos === undefined) return []
 
-  return [
-    ...new Set(
-      (repos as any[])
-        .reduce<string[][]>((repos, repo) => {
-          // console.log(repo)
-          if (repo.defaultBranchRef !== null) {
-            repos.push(
-              (repo.defaultBranchRef.target.history.nodes as any[]).reduce<
-                string[]
-              >((users, node) => {
-                const login: string = node.author.user?.login
-                if (login !== undefined) users.push(login)
-                return users
-              }, []),
-            )
-          }
-          return repos
-        }, [])
-        .flat(),
-    ),
-  ]
+  return ArraySet(
+    (repos as any[])
+      .reduce<string[][]>((repos, repo) => {
+        if (repo.defaultBranchRef !== null)
+          repos.push(
+            (repo.defaultBranchRef.target.history.nodes as any[]).reduce<
+              string[]
+            >((users, node) => {
+              const login: string = node.author.user?.login
+              if (login !== undefined) users.push(login)
+              return users
+            }, []),
+          )
+
+        return repos
+      }, [])
+      .flat(),
+  )
 }
