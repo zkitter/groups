@@ -5,6 +5,7 @@ const jestConfig: JestConfigWithTsJest = {
   collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
   coverageDirectory: 'coverage',
   projects: [
+    './test/jest.integration.ts',
     './test/jest.lint.ts',
     './test/jest.prettier.ts',
     './test/jest.unit.ts',
