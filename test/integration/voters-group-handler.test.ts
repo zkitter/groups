@@ -26,6 +26,23 @@ describe('voters-group handler', () => {
     })
   })
 
+  it('accepts since/until date string parameters', async () => {
+    const { body } = await request(app)
+      .post('/voters-group')
+      .send({
+        since: '2020-01-01',
+        until: '2020-01-02',
+      })
+      .expect(200)
+
+    expect(body).toBeInstanceOf(Array)
+    body.forEach((voter: string) => {
+      expect(typeof voter).toBe('string')
+      expect(voter.startsWith('0x')).toBe(true)
+      expect(voter).toBeTruthy()
+    })
+  })
+
   describe('should return 400 if', () => {
     it.each([
       ['maxOrgs', 'integer', { maxOrgs: 'a' }],
