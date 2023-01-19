@@ -11,8 +11,8 @@ describe('utils', () => {
 
   describe('minusOneMonth', () => {
     it('should return a date one month ago', () => {
-      const date = new Date('2021-01-01')
-      const oneMonthAgo = new Date('2020-12-01')
+      const date = new Date('2021-02-01')
+      const oneMonthAgo = new Date('2021-01-01')
       expect(minusOneMonth(date)).toEqual(oneMonthAgo)
     })
   })
