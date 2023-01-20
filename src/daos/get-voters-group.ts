@@ -1,7 +1,7 @@
 import votersGqlQuery from 'graphql/voters-gql-query'
+import { getSpaces } from 'snapshot/get-spaces'
 import { ArraySet, getTime, minusOneMonth } from 'utils'
 import { URLS } from '../constants'
-import { getSpaces } from '../snapshot/get-spaces'
 
 export const getVotersGroup = async (
   {
@@ -9,7 +9,12 @@ export const getVotersGroup = async (
     minFollowers = 10_000,
     since,
     until = new Date(),
-  }: { maxOrgs?: number; minFollowers?: number; since?: Date; until?: Date } = {
+  }: {
+    maxOrgs?: number
+    minFollowers?: number
+    since?: Date
+    until?: Date
+  } = {
     maxOrgs: 100,
     minFollowers: 10_000,
     until: new Date(),
