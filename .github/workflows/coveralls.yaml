@@ -5,7 +5,7 @@ on:
   pull_request:
     paths-ignore: ['**/*md', '**/*yaml', '**/*yml']
   push:
-    branches: [main]
+    branches: [main, staging]
     paths-ignore: ['**/*md', '**/*yaml', '**/*yml']
 
 jobs:

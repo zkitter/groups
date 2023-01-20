@@ -13,7 +13,11 @@ export const getCommittersGroup = async (
     minFollowers?: number
     since?: Date
     until?: Date
-  } = { maxOrgs: 100, minFollowers: 10_000, until: new Date() },
+  } = {
+    maxOrgs: 100,
+    minFollowers: 10_000,
+    until: new Date(),
+  },
 ) => {
   if (since === undefined) since = minusOneMonth(until)
   const orgs = await getGhOrgs({ maxOrgs, minFollowers })

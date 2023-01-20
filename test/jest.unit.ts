@@ -18,6 +18,7 @@ const jestUnitConfig: JestConfigWithTsJest = {
   moduleFileExtensions: ['js', 'ts'],
   preset: 'ts-jest',
   setupFilesAfterEnv: ['jest-chain', './test/setup.ts'],
+  testRegex: 'test/unit/.*\\.test\\.ts$',
 }
 
 export default jestUnitConfig
