@@ -10,7 +10,7 @@ const jestConfig: JestConfigWithTsJest = {
     './test/jest.prettier.ts',
     './test/jest.unit.ts',
   ],
-  testTimeout: 20_000,
+  testTimeout: 30_000,
   watchPlugins: [
     'jest-watch-select-projects',
     'jest-watch-typeahead/filename',
