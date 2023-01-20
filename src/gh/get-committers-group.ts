@@ -22,6 +22,7 @@ export const getCommittersGroup = async (
   if (since === undefined) since = minusOneMonth(until)
   const orgs = await getGhOrgs({ maxOrgs, minFollowers })
 
+  console.log({ maxOrgs, minFollowers, orgs, since, until })
   const users = await Promise.all(
     orgs.map(async (org) => {
       // @ts-expect-error - type guarded earlier

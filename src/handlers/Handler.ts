@@ -1,13 +1,14 @@
 import { Request, Response } from 'express'
 import { validate } from './validate'
 
-const coerceDates = (keys: string[], body: Record<string, any>) =>
+export const coerceDates = (keys: string[], body: Record<string, any>) =>
   Object.entries(body).reduce<Record<string, any>>((newBody, [key, value]) => {
     if (keys.includes(key)) {
       newBody[key] = new Date(value)
     } else {
       newBody[key] = value
     }
+    console.log({ newBody })
     return newBody
   }, {})
 
