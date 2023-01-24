@@ -1,9 +1,7 @@
 import { ok } from 'assert'
 import committersQuery from 'graphql/committers-query'
-import { ArraySet } from 'utils'
+import { ArraySet, parseDate } from 'utils'
 import { URLS } from '../constants'
-
-const parseDate = (date: Date) => date.toISOString().split('.')[0] + 'Z'
 
 export const getCommittersByOrg = async ({
   org,

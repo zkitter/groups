@@ -17,7 +17,7 @@ const jestUnitConfig: JestConfigWithTsJest = {
   moduleDirectories: ['node_modules', '<rootDir>/src'],
   moduleFileExtensions: ['js', 'ts'],
   preset: 'ts-jest',
-  setupFilesAfterEnv: ['jest-chain', './test/setup.ts'],
+  setupFilesAfterEnv: ['jest-extended/all', 'jest-chain', './test/setup.ts'],
   testRegex: 'test/unit/.*\\.test\\.ts$',
 }
 
