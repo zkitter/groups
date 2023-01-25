@@ -39,4 +39,13 @@ describe('GithubRepository', () => {
       expect(repo).toBeString().not.toBeEmpty()
     })
   })
+
+  it('get list of committers by org', async () => {
+    const committers = await ghRepository.getCommittersByOrg('uniswap')
+
+    expect(committers).toBeArray().not.toBeEmpty()
+    committers.forEach((committer) => {
+      expect(committer).toBeString().not.toBeEmpty()
+    })
+  })
 })

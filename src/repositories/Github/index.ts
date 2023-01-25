@@ -3,9 +3,10 @@ import { graphql } from '@octokit/graphql'
 import { paginateGraphql } from '@octokit/plugin-paginate-graphql'
 import { ok } from 'assert'
 import { Service } from 'typedi'
+import { ArraySet } from 'utils'
 import GithubRepositoryInterface from './interface'
 import {
-  // committersByOrgQuery,
+  committersByOrgQuery,
   contributedReposByUserQuery,
   reposByOrgQuery,
 } from './queries'
@@ -27,7 +28,9 @@ export class GithubRepository implements GithubRepositoryInterface {
     this.client = new PaginatedOctokit({ auth: process.env.GH_PAT })
   }
 
-  async getContributedRepos(login: string) {
+  async getContributedRepos(
+    login: string,
+  ): Promise<Array<{ name: string; org: string }>> {
     const { user } = await this.client.graphql.paginate(
       contributedReposByUserQuery,
       { login },
@@ -56,6 +59,32 @@ export class GithubRepository implements GithubRepositoryInterface {
   async getReposByOrgs(orgs: string[]): Promise<string[]> {
     return Promise.all(orgs.map(async (org) => this.getReposByOrg(org))).then(
       (repos) => repos.flat(),
+    )
+  }
+
+  async getCommittersByOrg(org: string): Promise<string[]> {
+    const { organization } = await this.client.graphql.paginate(
+      committersByOrgQuery,
+      { org },
+    )
+    const nodes = organization?.repositories?.nodes ?? []
+    return ArraySet(
+      (nodes as any[])
+        .reduce<string[][]>((repos, repo) => {
+          if (repo.defaultBranchRef !== null)
+            repos.push(
+              (repo.defaultBranchRef.target.history.nodes as any[]).reduce<
+                string[]
+              >((users, node) => {
+                const login: string = node.author.user?.login
+                if (login !== undefined) users.push(login)
+                return users
+              }, []),
+            )
+
+          return repos
+        }, [])
+        .flat(),
     )
   }
 }
