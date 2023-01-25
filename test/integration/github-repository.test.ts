@@ -1,8 +1,7 @@
 import { GithubRepository } from 'repositories'
-import GithubRepositoryInterface from 'repositories/Github/interface'
 
 describe('GithubRepository', () => {
-  let ghRepository: GithubRepositoryInterface
+  let ghRepository: GithubRepository
   beforeAll(() => {
     ghRepository = new GithubRepository()
   })

@@ -2,8 +2,7 @@ import { Service } from 'typedi'
 import { URLS } from '#'
 import { ArraySet, getTime, minusOneMonth } from 'utils'
 import SnapshotRepositoryInterface from './interface'
-import spacesGqlQuery from './queries/spaces'
-import votersQuery from './queries/voters'
+import { spacesQuery, votersQuery } from './queries'
 
 @Service()
 export class SnapshotRepository implements SnapshotRepositoryInterface {
@@ -35,7 +34,7 @@ export class SnapshotRepository implements SnapshotRepositoryInterface {
   }
 
   async getGhOrgsBySpaceIds(ids: string[]): Promise<string[]> {
-    const { data } = await this.gqlQuery(spacesGqlQuery, { id_in: ids })
+    const { data } = await this.gqlQuery(spacesQuery, { id_in: ids })
     const spaces = data?.spaces ?? []
     return spaces.map(({ github }: { github: string }) => github)
   }

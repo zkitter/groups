@@ -1,0 +1,11 @@
+{
+  "directory": [
+    "src/repositories",
+    "src/repositories/Github/queries",
+    "src/repositories/Snapshot/queries"
+  ],
+  "delete": true,
+  "exclude": ["src/repositories/Mongo", "src/repositories/GqlRepository.ts"],
+  "noSemicolon": true,
+  "singleQuotes": true
+}

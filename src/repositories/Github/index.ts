@@ -4,8 +4,11 @@ import { paginateGraphql } from '@octokit/plugin-paginate-graphql'
 import { ok } from 'assert'
 import { Service } from 'typedi'
 import GithubRepositoryInterface from './interface'
-import contributedReposByUserQuery from './queries/contributed-repos-by-user'
-import reposByOrgQuery from './queries/repos-by-org'
+import {
+  // committersByOrgQuery,
+  contributedReposByUserQuery,
+  reposByOrgQuery,
+} from './queries'
 
 @Service()
 export class GithubRepository implements GithubRepositoryInterface {

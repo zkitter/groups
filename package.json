@@ -18,6 +18,7 @@
     "@types/node": "^18.11.18",
     "@types/supertest": "^2.0.12",
     "@types/yargs": "^17.0.19",
+    "barrelsby": "^2.5.1",
     "concurrently": "^7.6.0",
     "express": "^4.18.2",
     "husky": "^8.0.2",

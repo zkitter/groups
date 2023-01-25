@@ -1,4 +1,8 @@
 scripts:
+  barrels:
+    script: barrelsby -c .barrelsby.json
+    hiddenFromHelp: true
+
   build:
     script: nps clean compile
     description: Build project

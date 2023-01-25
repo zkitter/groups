@@ -1,4 +1,4 @@
-export default `
+export const votersQuery = `
 query Voters($space_in: [String], $created_gte: Int, $created_lte: Int){
   votes (
     where: {
