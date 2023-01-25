@@ -11,6 +11,8 @@
   "author": "r1oga",
   "license": "ISC",
   "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
+    "@jackfranklin/test-data-bot": "^2.0.0",
     "@r1oga/eslint-config": "^1.1.6",
     "@r1oga/prettier-config": "^1.1.8",
     "@types/express": "^4.17.15",
