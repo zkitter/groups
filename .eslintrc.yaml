@@ -15,6 +15,3 @@ overrides:
   - files: ['src/handlers/validate.ts']
     rules:
       '@typescript-eslint/strict-boolean-expressions': off
-  - files: ['src/repositories/SnapshotRepository.ts']
-    rules:
-      'sort/object-properties': off

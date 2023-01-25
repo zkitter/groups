@@ -1,5 +1,5 @@
-import { GithubRepository } from 'repositories/Github'
-import GithubRepositoryInterface from '../../src/repositories/Github/interface'
+import { GithubRepository } from 'repositories'
+import GithubRepositoryInterface from 'repositories/Github/interface'
 
 describe('GithubRepository', () => {
   let ghRepository: GithubRepositoryInterface
