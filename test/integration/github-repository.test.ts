@@ -9,7 +9,7 @@ describe('GithubRepository', () => {
 
   it('get list of repos a user contributed to', async () => {
     const repos = await ghRepository.getContributedRepos('r1oga')
-    console.log(repos)
+
     expect(repos).toBeArray().not.toBeEmpty()
     repos.forEach(({ name, org }) => {
       expect(name).toBeString().not.toBeEmpty()
@@ -21,6 +21,21 @@ describe('GithubRepository', () => {
     const repos = await ghRepository.getReposByOrg('uniswap')
 
     expect(repos).toBeArray().not.toBeEmpty()
+    repos.forEach((repo) => {
+      expect(repo).toBeString().not.toBeEmpty()
+    })
+  })
+
+  it('get list of repos of multiple orgs', async () => {
+    const repos = await ghRepository.getReposByOrgs([
+      'uniswap',
+      'ethereum-optimism',
+    ])
+
+    expect(repos)
+      .toBeArray()
+      .not.toBeEmpty()
+      .toIncludeAllMembers(['optimism', 'unisocks'])
     repos.forEach((repo) => {
       expect(repo).toBeString().not.toBeEmpty()
     })

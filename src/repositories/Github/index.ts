@@ -51,6 +51,8 @@ export class GithubRepository implements GithubRepositoryInterface {
   }
 
   async getReposByOrgs(orgs: string[]): Promise<string[]> {
-    return Promise.resolve([])
+    return Promise.all(orgs.map(async (org) => this.getReposByOrg(org))).then(
+      (repos) => repos.flat(),
+    )
   }
 }
