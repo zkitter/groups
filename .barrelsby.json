@@ -5,7 +5,6 @@
     "src/repositories/Snapshot/queries"
   ],
   "delete": true,
-  "exclude": ["src/repositories/GqlRepository.ts"],
   "noSemicolon": true,
   "singleQuotes": true
 }

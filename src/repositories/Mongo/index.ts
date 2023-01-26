@@ -1,38 +1,30 @@
-import { Org, User } from '@prisma/client'
+import { Org } from '@prisma/client'
 
 import { Service } from 'typedi'
 
 import { Db } from 'db/mongo'
+import { OrgData } from '../../types'
+import MongoRepositoryInterface from './interface'
 
 @Service()
-export class MongoRepository {
+export class MongoRepository implements MongoRepositoryInterface {
   constructor(readonly db: Db) {}
 
-  async createOrg(org: Org) {
-    return this.db.org.create({ data: org })
+  async upsertOrg(org: OrgData): Promise<Org> {
+    return this.db.org.upsert({
+      create: { ...org },
+      update: {
+        followers: org.followers,
+        followers7d: org.followers7d,
+        repos: org.repos,
+      },
+      where: {
+        snapshotId: org.snapshotId,
+      },
+    })
   }
 
-  async storeUser(user: User) {
-    return this.db.user.create({ data: user })
+  async upsertOrgs(orgs: OrgData[]): Promise<Org[]> {
+    return Promise.all(orgs.map(this.upsertOrg))
   }
-
-  // update({ id, name }: Item) {
-  //   return this.db.item.update({ data: { name }, where: { id } })
-  // }
-
-  async findAllUsers() {
-    return this.db.user.findMany()
-  }
-
-  async findAllOrgs() {
-    return this.db.org.findMany()
-  }
-
-  findOneUser(ghName: string) {
-    return this.db.user.findUnique({ where: { ghName } })
-  }
-
-  // delete(id: number) {
-  //   return this.db.item.delete({ where: { id } })
-  // }
 }

@@ -1,11 +1,13 @@
 import { mock } from 'jest-mock-extended'
+import { Container } from 'typedi'
 import { MongoRepository } from 'repositories/Mongo'
 import { WhitelistService } from 'services/Whitelist'
 import { GithubRepository, SnapshotRepository } from '../../src/repositories'
+import { orgsBuilder } from '../lib'
 
 describe('WhitelistService', () => {
   let whitelistService: WhitelistService
-  const db = mock<MongoRepository>()
+  const db = Container.get(MongoRepository)
   const gh = mock<GithubRepository>()
   const snapshot = mock<SnapshotRepository>()
 
@@ -137,22 +139,29 @@ describe('WhitelistService', () => {
     `)
   })
 
-  it.todo('refresh')
-  it.todo('unWhitelist')
+  it('refresh: update orgs in db', async () => {
+    const orgs = orgsBuilder(3)
+    snapshot.getSpaces.mockResolvedValue(
+      orgs.reduce((spaces, { followers, snapshotId, snapshotName }) => {
+        // @ts-expect-error
+        spaces[snapshotId] = { followers, name: snapshotName }
+        return spaces
+      }, {}),
+    )
+    snapshot.getGhOrgsBySpaceIds.mockResolvedValueOnce(
+      orgs.map(({ ghName, snapshotId }) => ({ ghName, snapshotId })),
+    )
+    gh.getReposByOrg
+      .mockResolvedValueOnce(orgs[0].repos)
+      .mockResolvedValueOnce(orgs[1].repos)
+    jest
+      .spyOn(db, 'upsertOrg')
+      .mockResolvedValueOnce(orgs[0])
+      .mockResolvedValueOnce(orgs[1])
+      .mockResolvedValueOnce(orgs[2])
 
-  // it('add org', async () => {
-  //   const org = orgBuilder()
-  //   db.createOrg.mockResolvedValueOnce(org)
-  //   const createdOrg = await whitelistService.addOrg(org)
-  //
-  //   expect(createdOrg).toEqual(org)
-  // })
-  //
-  // it('get orgs', async () => {
-  //   const orgs = [orgBuilder(), orgBuilder()]
-  //   db.getOrgs.mockResolvedValueOnce(orgs)
-  //   const retrievedOrgs = await whitelistService.getOrgs()
-  //
-  //   expect(retrievedOrgs).toEqual(orgs)
-  // })
+    await expect(whitelistService.refresh()).resolves.toEqual(orgs)
+  })
+
+  it.todo('unWhitelist')
 })

@@ -22,5 +22,8 @@ export const orgBuilder = build<Org>({
   },
 })
 
+export const orgsBuilder = (num: number) =>
+  [...Array(num).keys()].map(() => orgBuilder())
+
 export type MockContext = DeepMockProxy<PrismaClient>
 export const createMockContext = (): MockContext => mockDeep<PrismaClient>()
