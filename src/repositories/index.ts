@@ -3,4 +3,5 @@
  */
 
 export * from './Github/index'
+export * from './Mongo/index'
 export * from './Snapshot/index'

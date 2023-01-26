@@ -5,6 +5,8 @@ import { DeepMockProxy, mockDeep } from 'jest-mock-extended'
 
 export const orgBuilder = build<Org>({
   fields: {
+    followers: perBuild(() => faker.datatype.number({ min: 10_000 })),
+    followers7d: null,
     ghName: perBuild(() => faker.internet.userName()),
     id: perBuild(() => faker.database.mongodbObjectId()),
     repos: perBuild(() =>

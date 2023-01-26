@@ -27,16 +27,25 @@ export class SnapshotRepository implements SnapshotRepositoryInterface {
     return res.json()
   }
 
-  async getSpaces(): Promise<Record<string, any>> {
+  async getSpaces(): Promise<
+    Record<string, { name: string; followers?: number; followers_7d?: number }>
+  > {
     const res = await fetch(URLS.SNAPSHOT_EXPLORE)
     const { spaces } = await res.json()
     return spaces
   }
 
-  async getGhOrgsBySpaceIds(ids: string[]): Promise<string[]> {
+  async getGhOrgsBySpaceIds(
+    ids: string[],
+  ): Promise<Array<{ ghName: unknown; snapshotId: string }>> {
     const { data } = await this.gqlQuery(spacesQuery, { id_in: ids })
     const spaces = data?.spaces ?? []
-    return spaces.map(({ github }: { github: string }) => github)
+    return (spaces as Array<{ github: string; id: string }>).map(
+      ({ github: ghName, id: snapshotId }) => ({
+        ghName,
+        snapshotId,
+      }),
+    )
   }
 
   async getVoters(
