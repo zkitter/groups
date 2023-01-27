@@ -15,6 +15,11 @@ scripts:
     script: tsc -p tsconfig.compile.json
     hiddenFromHelp: true
 
+  db:
+    gen-schema:
+      script: dotenv -e .env.test pnpx prisma generate
+      hiddenFromHelp: true
+
   fix:
     default:
       script: nps lint.fix format.fix
@@ -72,6 +77,9 @@ scripts:
     once:
       script: jest --config test/jest.config.ts
       description: Run tests (once, coverage)
+    e2e:
+      script: dotenv -e .env.test -- jest --config test/jest.config.ts --selectProjects e2e --coverage=false
+      description: Run e2e tests
 
   validate:
     default:

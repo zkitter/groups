@@ -15,3 +15,6 @@ overrides:
   - files: ['src/handlers/validate.ts']
     rules:
       '@typescript-eslint/strict-boolean-expressions': off
+  - files: ['test/setup.e2e.ts']
+    rules:
+      '@typescript-eslint/no-unused-vars': off
