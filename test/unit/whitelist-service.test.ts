@@ -1,23 +1,15 @@
 import { TestBed } from '@automock/jest'
-import { Container } from 'typedi'
-import {
-  GithubRepository,
-  MongoRepository,
-  SnapshotRepository,
-} from 'repositories'
+import { GithubRepository, SnapshotRepository } from 'repositories'
 import { WhitelistService } from 'services/Whitelist'
-import { orgsBuilder } from '../lib'
 
 describe('WhitelistService', () => {
   let whitelistService: WhitelistService
-  let db: jest.Mocked<MongoRepository>
   let gh: jest.Mocked<GithubRepository>
   let snapshot: jest.Mocked<SnapshotRepository>
 
   beforeEach(() => {
     const { unit, unitRef } = TestBed.create(WhitelistService).compile()
     whitelistService = unit
-    db = unitRef.get(MongoRepository)
     gh = unitRef.get(GithubRepository)
     snapshot = unitRef.get(SnapshotRepository)
   })
@@ -147,29 +139,6 @@ describe('WhitelistService', () => {
         },
       }
     `)
-  })
-
-  it('refresh: update orgs in db', async () => {
-    const orgs = orgsBuilder(2)
-    snapshot.getSpaces.mockResolvedValue(
-      orgs.reduce((spaces, { followers, snapshotId, snapshotName }) => {
-        // @ts-expect-error
-        spaces[snapshotId] = { followers, name: snapshotName }
-        return spaces
-      }, {}),
-    )
-    snapshot.getGhOrgsBySpaceIds.mockResolvedValueOnce(
-      orgs.map(({ ghName, snapshotId }) => ({ ghName, snapshotId })),
-    )
-    gh.getReposByOrg
-      .mockResolvedValueOnce(orgs[0].repos)
-      .mockResolvedValueOnce(orgs[1].repos)
-    db.upsertOrg.mockResolvedValueOnce(orgs[0]).mockResolvedValueOnce(orgs[1])
-    db.upsertOrgs.mockImplementationOnce(
-      Container.get(MongoRepository).upsertOrgs,
-    )
-
-    await expect(whitelistService.refresh()).resolves.toEqual(orgs)
   })
 
   it.todo('unWhitelist')

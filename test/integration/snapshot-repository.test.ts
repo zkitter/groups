@@ -29,13 +29,14 @@ describe('SnapshotRepository', () => {
       .toBeArray()
       .not.toBeEmpty()
       .toIncludeAllMembers([
-        'stargate-protocol',
-        'Uniswap',
-        'aave',
-        'ensdomains',
+        { ghName: 'stargate-protocol', snapshotId: 'stgdao.eth' },
+        { ghName: 'aave', snapshotId: 'aave.eth' },
+        { ghName: 'Uniswap', snapshotId: 'uniswap' },
+        { ghName: 'ensdomains', snapshotId: 'ens.eth' },
       ])
-    spaces.forEach((github) => {
-      expect(github).toBeString().not.toBeEmpty()
+    spaces.forEach(({ ghName, snapshotId }) => {
+      expect(ghName).toBeString().not.toBeEmpty()
+      expect(snapshotId).toBeString().not.toBeEmpty()
     })
   })
 
