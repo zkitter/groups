@@ -1,0 +1,10 @@
+{
+  "directory": [
+    "src/repositories",
+    "src/repositories/Github/queries",
+    "src/repositories/Snapshot/queries"
+  ],
+  "delete": true,
+  "noSemicolon": true,
+  "singleQuotes": true
+}

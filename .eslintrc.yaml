@@ -1,5 +1,8 @@
 extends: ['@r1oga']
 overrides:
+  - files: ['src/**/*.ts']
+    rules:
+      no-useless-constructor: off
   - files: ['scripts/*.ts']
     rules:
       no-console: off
@@ -8,6 +11,10 @@ overrides:
   - files: ['test/integration/*.ts']
     rules:
       'jest/expect-expect': off
+      '@typescript-eslint/ban-ts-comment': off
   - files: ['src/handlers/validate.ts']
     rules:
       '@typescript-eslint/strict-boolean-expressions': off
+  - files: ['test/setup.e2e.ts']
+    rules:
+      '@typescript-eslint/no-unused-vars': off

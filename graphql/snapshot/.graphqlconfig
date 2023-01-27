@@ -1,14 +1,13 @@
 {
   "name": "Snapshot.org GraphQL Schema",
-  "schemaPath": "schema.graphql",
   "extensions": {
     "endpoints": {
-      "Default GraphQL Endpoint": {
+      "snapshot": {
         "url": "https://hub.snapshot.org/graphql",
         "headers": {
           "user-agent": "JS GraphQL"
         },
-        "introspect": false
+        "introspect": true
       }
     }
   }

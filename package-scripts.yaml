@@ -1,4 +1,8 @@
 scripts:
+  barrels:
+    script: barrelsby -c .barrelsby.json
+    hiddenFromHelp: true
+
   build:
     script: nps clean compile
     description: Build project
@@ -10,6 +14,11 @@ scripts:
   compile:
     script: tsc -p tsconfig.compile.json
     hiddenFromHelp: true
+
+  db:
+    gen-schema:
+      script: dotenv -e .env.test pnpx prisma generate
+      hiddenFromHelp: true
 
   fix:
     default:
@@ -60,7 +69,7 @@ scripts:
       script: nps 'test.once --watch --coverage=false'
       description: Run tests (watch, no coverage)
     ci:
-      script: jest --config test/jest.config.ts --selectProjects unit integration --silent --reporters=jest-silent-reporter
+      script: jest --config test/jest.config.ts --selectProjects unit integration e2e --silent --reporters=jest-silent-reporter
       hiddenFromHelp: true
     debug:
       script: node --inspect-brk ./node_modules/jest/bin/jest --runInBand --watch --config test/jest.unit.ts
@@ -68,6 +77,9 @@ scripts:
     once:
       script: jest --config test/jest.config.ts
       description: Run tests (once, coverage)
+    e2e:
+      script: dotenv -e .env.test -- jest --config test/jest.config.ts --selectProjects e2e --coverage=false
+      description: Run e2e tests
 
   validate:
     default:

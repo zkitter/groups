@@ -1,4 +1,4 @@
-import { getVotersGroup } from '../../src/daos/get-voters-group'
+import { getVotersGroup } from 'daos/get-voters-group'
 
 describe('getVotersGroup', () => {
   it('should return a list of addresses', async () => {

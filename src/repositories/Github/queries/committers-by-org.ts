@@ -1,6 +1,7 @@
-query orgs {
-    organization(login: "uniswap") {
-        repositories(first: 100) {
+export const committersByOrgQuery = `
+query orgs($org: String!, $cursor: String) {
+    organization(login: $org) {
+        repositories(first: 100, after: $cursor) {
             nodes {
                 name
                 defaultBranchRef {
@@ -21,6 +22,11 @@ query orgs {
                     }
                 }
             }
+            pageInfo {
+                endCursor
+                hasNextPage
+            }
         }
     }
 }
+`

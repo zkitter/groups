@@ -1,7 +1,10 @@
 {
   "include": ["src", "scripts", "test", "functions"],
   "exclude": ["test/coverage"],
-  "files": ["node_modules/jest-chain/types/index.d.ts"],
+  "files": [
+    "node_modules/jest-chain/types/index.d.ts",
+    "node_modules/jest-extended/types/index.d.ts"
+  ],
   "compilerOptions": {
     "noEmit": true,
     "baseUrl": "./src",
@@ -24,6 +27,9 @@
     "noUnusedLocals": true,
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
-    "importHelpers": true
+    "importHelpers": true,
+    "paths": {
+      "#": ["./constants.ts"]
+    }
   }
 }

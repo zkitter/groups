@@ -1,19 +1,18 @@
-export default `
-query orgs($login: String!, $since: GitTimestamp!, $until: GitTimestamp!) {
-    organization(login: $login) {
-        repositories(first: 100) {
+query orgs($org: String!, $cursor: String) {
+    organization(login: $org) {
+        repositories(first: 100, after: $cursor) {
             nodes {
                 name
                 defaultBranchRef {
                     name
                     target {
                         ... on Commit {
-                            history(since: $since, until: $until) {
+                            history(since: "2022-12-01T00:00:00Z", until: "2023-01-10T00:00:00Z") {
                                 nodes {
                                     committedDate
                                     author {
                                         user {
-                                          login
+                                            login
                                         }
                                     }
                                 }
@@ -22,8 +21,10 @@ query orgs($login: String!, $since: GitTimestamp!, $until: GitTimestamp!) {
                     }
                 }
             }
+            pageInfo {
+                endCursor
+                hasNextPage
+            }
         }
     }
 }
-
-`
