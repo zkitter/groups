@@ -49,6 +49,7 @@ jobs:
       - name: Test
         env:
           GH_PAT: ${{ secrets.GITHUB_TOKEN }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
           TZ: UTC
         run: pnpm run nps t.ci
 
