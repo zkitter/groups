@@ -3,7 +3,7 @@ import { URLS } from '../constants'
 
 export const filterSpaces =
   (minFollowers: number) =>
-  ({ followers }: Space) =>
+  ({ followers }: any) =>
     followers !== undefined && followers >= minFollowers
 
 export const getSpaces =
@@ -24,7 +24,6 @@ export const getSpaces =
       .reduce<Array<{ id: string; followers: number }>>(
         (spaces, [id, space]) => {
           if (filterSpaces(minFollowers)(space)) {
-            // @ts-expect-error - filterSpaces already ensures that props are defined
             spaces.push({ followers: space.followers, id })
           }
 
