@@ -1,4 +1,4 @@
-import { Org } from '@prisma/client'
+import { Service } from 'typedi'
 import {
   GithubRepository,
   MongoRepository,
@@ -66,7 +66,7 @@ export class WhitelistService implements WhitelistServiceInterface {
     )
   }
 
-  async getOrgs(
+  async getOrgsWithRepos(
     {
       maxOrgs,
       minFollowers,
@@ -74,20 +74,10 @@ export class WhitelistService implements WhitelistServiceInterface {
       maxOrgs?: number
       minFollowers?: number
     } = { maxOrgs: 100, minFollowers: 10_000 },
-  ): Promise<
-    Record<
-      string,
-      {
-        followers: number
-        followers7d: number
-        snapshotId: string
-        snapshotName: string
-        ghName: string
-        repos: string[]
-      }
-    >
-  > {
+  ): Promise<Record<string, OrgData>> {
     const spaces = await this.getSpaces({ maxOrgs, minFollowers })
+    const orgs: Record<string, OrgData> = {}
+
     await Promise.all(
       split(Object.keys(spaces)).map(async (snapshotNames) => {
         const ghOrgs = await this.getGhOrgs(snapshotNames)
@@ -95,18 +85,19 @@ export class WhitelistService implements WhitelistServiceInterface {
         await Promise.all(
           ghOrgs.map(async ({ ghName, snapshotId }) => {
             const repos = await this.gh.getReposByOrg(ghName)
-            spaces[snapshotId].ghName = ghName
-            spaces[snapshotId].repos = repos
+            if (repos.length > 0) {
+              orgs[snapshotId] = { ...spaces[snapshotId], ghName, repos }
+            }
           }),
         )
       }),
     )
 
-    return spaces as Record<string, OrgData>
+    return orgs
   }
 
-  async refresh(): Promise<Org[]> {
-    const orgs = await this.getOrgs()
+  async refresh(): Promise<OrgData[]> {
+    const orgs = await this.getOrgsWithRepos()
     return this.db.upsertOrgs(Object.values(orgs))
   }
 

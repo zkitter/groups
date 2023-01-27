@@ -9,7 +9,7 @@ export interface Space {
 
 export interface OrgData {
   followers: number
-  followers7d: number
+  followers7d?: number
   snapshotId: string
   snapshotName: string
   ghName: string

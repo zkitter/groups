@@ -1,5 +1,5 @@
 import { Org } from '@prisma/client'
-import { Space } from '../../types'
+import { OrgData, Space } from '../../types'
 
 export default interface WhitelistServiceInterface {
   getSpaces: ({
@@ -14,25 +14,13 @@ export default interface WhitelistServiceInterface {
     snapshotNames: string[],
   ) => Promise<Array<{ ghName: string; snapshotId: string }>>
 
-  getOrgs: ({
+  getOrgsWithRepos: ({
     maxOrgs,
     minFollowers,
   }: {
     maxOrgs?: number
     minFollowers?: number
-  }) => Promise<
-    Record<
-      string,
-      {
-        followers: number
-        followers7d: number
-        snapshotId: string
-        snapshotName: string
-        ghName: string
-        repos: string[]
-      }
-    >
-  >
+  }) => Promise<Record<string, OrgData>>
   unWhitelist: (ghNameOrSnapshotId: string) => Promise<Org>
-  refresh: () => Promise<Org[]>
+  refresh: () => Promise<OrgData[]>
 }

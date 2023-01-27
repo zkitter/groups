@@ -17,7 +17,7 @@ describe('refresh handler', () => {
       ghName: expect.any(String),
       repos: expect.any(Array<string>),
       snapshotId: expect.any(String),
-      updatedAt: expect.any(String),
+      snapshotName: expect.any(String),
     })
   })
 })

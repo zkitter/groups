@@ -1,18 +1,28 @@
-import { Org } from '@prisma/client'
-
+import { PrismaClient } from '@prisma/client'
 import { Service } from 'typedi'
+import { Db } from 'db/prisma'
+import { OrgData } from 'types'
 
-import { Db } from 'db/mongo'
-import { OrgData } from '../../types'
 import MongoRepositoryInterface from './interface'
 
 @Service()
 export class MongoRepository implements MongoRepositoryInterface {
-  constructor(readonly db: Db) {}
+  db: PrismaClient
 
-  async upsertOrg(org: OrgData): Promise<Org> {
+  constructor(db: Db) {
+    this.db = db.prisma
+  }
+
+  upsertOrg(org: OrgData) {
     return this.db.org.upsert({
-      create: { ...org },
+      create: org,
+      select: {
+        followers: true,
+        ghName: true,
+        repos: true,
+        snapshotId: true,
+        snapshotName: true,
+      },
       update: {
         followers: org.followers,
         followers7d: org.followers7d,
@@ -24,7 +34,7 @@ export class MongoRepository implements MongoRepositoryInterface {
     })
   }
 
-  async upsertOrgs(orgs: OrgData[]): Promise<Org[]> {
-    return Promise.all(orgs.map(this.upsertOrg))
+  async upsertOrgs(orgs: OrgData[]): Promise<OrgData[]> {
+    return this.db.$transaction(orgs.map((org) => this.upsertOrg(org)))
   }
 }
