@@ -48,12 +48,18 @@ export class GithubRepository implements GithubRepositoryInterface {
   }
 
   async getReposByOrg(org: string): Promise<string[]> {
-    const { organization } = await this.client.graphql.paginate(
-      reposByOrgQuery,
-      { org },
-    )
-    const nodes = organization?.repositories?.nodes ?? []
-    return nodes.map(({ name }: { name: string }) => name)
+    try {
+      const { organization } = await this.client.graphql.paginate(
+        reposByOrgQuery,
+        { org },
+      )
+      const nodes = organization?.repositories?.nodes ?? []
+      return nodes.map(({ name }: { name: string }) => name)
+    } catch (e) {
+      // catching all
+      // observed error: Could not resolve to an Organization with the login of 'arbi-s'
+      return []
+    }
   }
 
   async getReposByOrgs(orgs: string[]): Promise<string[]> {
