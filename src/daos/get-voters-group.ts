@@ -1,4 +1,4 @@
-import votersGqlQuery from 'graphql/voters-gql-query'
+import { votersQuery } from 'repositories/Snapshot/queries'
 import { getSpaces } from 'snapshot/get-spaces'
 import { ArraySet, getTime, minusOneMonth } from 'utils'
 import { URLS } from '../constants'
@@ -25,7 +25,7 @@ export const getVotersGroup = async (
 
   const res = await fetch(URLS.SNAPSHOT_GQL, {
     body: JSON.stringify({
-      query: votersGqlQuery,
+      query: votersQuery,
       variables: {
         created_gte: getTime(since),
         created_lte: getTime(until),
