@@ -1,18 +1,25 @@
-import { mock } from 'jest-mock-extended'
+import { TestBed } from '@automock/jest'
 import { Container } from 'typedi'
-import { MongoRepository } from 'repositories/Mongo'
+import {
+  GithubRepository,
+  MongoRepository,
+  SnapshotRepository,
+} from 'repositories'
 import { WhitelistService } from 'services/Whitelist'
-import { GithubRepository, SnapshotRepository } from '../../src/repositories'
 import { orgsBuilder } from '../lib'
 
 describe('WhitelistService', () => {
   let whitelistService: WhitelistService
-  const db = Container.get(MongoRepository)
-  const gh = mock<GithubRepository>()
-  const snapshot = mock<SnapshotRepository>()
+  let db: jest.Mocked<MongoRepository>
+  let gh: jest.Mocked<GithubRepository>
+  let snapshot: jest.Mocked<SnapshotRepository>
 
   beforeEach(() => {
-    whitelistService = new WhitelistService(db, gh, snapshot)
+    const { unit, unitRef } = TestBed.create(WhitelistService).compile()
+    whitelistService = unit
+    db = unitRef.get(MongoRepository)
+    gh = unitRef.get(GithubRepository)
+    snapshot = unitRef.get(SnapshotRepository)
   })
 
   const SPACES = {
@@ -24,7 +31,9 @@ describe('WhitelistService', () => {
   describe('get spaces', () => {
     it('should return spaces', async () => {
       snapshot.getSpaces.mockResolvedValue(SPACES)
+
       const result = await whitelistService.getSpaces()
+
       expect(result).toMatchInlineSnapshot(`
         {
           "a.eth": {
@@ -104,7 +113,8 @@ describe('WhitelistService', () => {
       .mockResolvedValueOnce(['repo-ba', 'repo-bb'])
       .mockResolvedValueOnce(['repo-ca'])
 
-    await expect(whitelistService.getOrgs()).resolves.toMatchInlineSnapshot(`
+    await expect(whitelistService.getOrgsWithRepos()).resolves
+      .toMatchInlineSnapshot(`
       {
         "a.eth": {
           "followers": 10000,
@@ -140,7 +150,7 @@ describe('WhitelistService', () => {
   })
 
   it('refresh: update orgs in db', async () => {
-    const orgs = orgsBuilder(3)
+    const orgs = orgsBuilder(2)
     snapshot.getSpaces.mockResolvedValue(
       orgs.reduce((spaces, { followers, snapshotId, snapshotName }) => {
         // @ts-expect-error
@@ -154,11 +164,10 @@ describe('WhitelistService', () => {
     gh.getReposByOrg
       .mockResolvedValueOnce(orgs[0].repos)
       .mockResolvedValueOnce(orgs[1].repos)
-    jest
-      .spyOn(db, 'upsertOrg')
-      .mockResolvedValueOnce(orgs[0])
-      .mockResolvedValueOnce(orgs[1])
-      .mockResolvedValueOnce(orgs[2])
+    db.upsertOrg.mockResolvedValueOnce(orgs[0]).mockResolvedValueOnce(orgs[1])
+    db.upsertOrgs.mockImplementationOnce(
+      Container.get(MongoRepository).upsertOrgs,
+    )
 
     await expect(whitelistService.refresh()).resolves.toEqual(orgs)
   })
