@@ -9,6 +9,7 @@ import { OrgData, Space } from '../../types'
 import { split } from '../../utils'
 import WhitelistServiceInterface from './interface'
 
+@Service()
 export class WhitelistService implements WhitelistServiceInterface {
   constructor(
     readonly db: MongoRepository,
