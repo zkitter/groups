@@ -1,17 +1,8 @@
 import { Service } from 'typedi'
 import { GithubRepository, SnapshotRepository } from 'repositories'
-import { ArraySet, minusOneMonth, notBot } from 'utils'
-import { CHUNK_SIZE } from '../constants'
+import { ArraySet, minusOneMonth, notBot, split } from 'utils'
 import { filterSpaces } from '../snapshot/get-spaces'
 import { Space } from '../types'
-
-const split = (arr: string[]) => {
-  const chunks = []
-  for (let i = 0; i < arr.length; i += CHUNK_SIZE) {
-    chunks.push(arr.slice(i, i + CHUNK_SIZE))
-  }
-  return chunks
-}
 
 @Service()
 export class GroupService {
@@ -30,11 +21,11 @@ export class GroupService {
     },
   ) {
     const spaces = await this.snapshotRepository.getSpaces()
+    // @ts-expect-error
     return Object.entries(spaces as Space[])
       .reduce<Array<{ id: string; followers: number }>>(
         (spaces, [id, space]) => {
           if (filterSpaces(minFollowers)(space)) {
-            // @ts-expect-error - filterSpaces already ensures that props are defined
             spaces.push({ followers: space.followers, id })
           }
 
@@ -50,6 +41,7 @@ export class GroupService {
   private async getGhOrgsChunk(ids: string[]) {
     const spaces = await this.snapshotRepository.getGhOrgsBySpaceIds(ids)
     return spaces.reduce<string[]>((spaces, github) => {
+      // @ts-expect-error
       if (github !== null) spaces.push(github)
       return spaces
     }, [])
@@ -103,8 +95,10 @@ export class GroupService {
 
     const committers = nodes
       .reduce<string[][]>((repos, repo) => {
+        // @ts-expect-error
         if (repo.defaultBranchRef !== null)
           repos.push(
+            // @ts-expect-error
             (repo.defaultBranchRef.target.history.nodes as any[]).reduce<
               string[]
             >((users, node) => {
