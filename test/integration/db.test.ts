@@ -6,7 +6,7 @@ describe('Prisma (Mongo) DB', () => {
   const db = new Db()
 
   afterAll(async () => {
-    await db.org.deleteMany()
+    await db.prisma.org.deleteMany()
     await db.prisma.$disconnect()
   })
 
