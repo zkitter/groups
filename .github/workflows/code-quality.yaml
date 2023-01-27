@@ -39,7 +39,7 @@ jobs:
         run: pnpm i --ignore-scripts --reporter=silent
 
       - name: Generate prisma models
-        run: pnpm run nps prisma.generate
+        run: pnpm run nps db.gen-schema
 
       - name: Validate
         run: pnpm run nps v.ci
