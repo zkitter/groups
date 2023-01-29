@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "npm run nps db.gen-schema barrels build",
+    "start": "NODE_ENV=production node -r module-alias/register dist",
     "nps": "nps",
     "prepare": "husky install",
     "setup": "pnpm 2> /dev/null || npm i -g pnpm && pnpm i"
