@@ -1,5 +1,5 @@
 {
-  "include": ["src", "scripts", "test", "functions"],
+  "include": ["src", "scripts", "test"],
   "exclude": ["test/coverage"],
   "files": [
     "node_modules/jest-chain/types/index.d.ts",
