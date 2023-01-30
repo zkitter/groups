@@ -1,4 +1,4 @@
-import { ArraySet, getTime, minusOneMonth, notBot } from 'utils'
+import { ArraySet, getTime, intersect, minusOneMonth, notBot } from 'utils'
 
 describe('utils', () => {
   describe('ArraySet', () => {
@@ -28,6 +28,16 @@ describe('utils', () => {
     it('should return true if string does not contain [bot]', () => {
       expect(notBot('a')).toBe(true)
       expect(notBot('a[bot]')).toBe(false)
+    })
+  })
+
+  describe('intersect', () => {
+    it('should return true if two arrays have at least one element in common', () => {
+      expect(intersect(['a', 'b', 'c'], ['d', 'e', 'f', 'a'])).toBe(true)
+    })
+
+    it('should return false if the two arrays have no element in common', () => {
+      expect(intersect(['a', 'b', 'c'], ['d', 'e', 'f'])).toBe(false)
     })
   })
 })

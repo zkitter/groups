@@ -23,8 +23,8 @@ export const split = (arr: string[]) => {
 
 export const filterSpaces =
   (minFollowers: number) =>
-  ({ followers }: any) =>
-    followers !== undefined && followers >= minFollowers
+    ({ followers }: any) =>
+      followers !== undefined && followers >= minFollowers
 
 const validations = [
   body('maxOrgs').if(body('maxOrgs').exists()).isInt(),
@@ -36,4 +36,10 @@ const validations = [
 export const validate = async (req: Request, res: Response) => {
   await Promise.all(validations.map(async (validation) => validation.run(req)))
   return validationResult(req)
+}
+
+export const intersect = (a: string[], b: string[]) => {
+  const setA = new Set(a)
+  const setB = new Set(b)
+  return new Set([...setA].filter((x) => setB.has(x))).size > 0
 }
