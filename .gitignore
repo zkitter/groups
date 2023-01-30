@@ -11,3 +11,6 @@ coverage
 
 .env
 .env.test
+.gh-pat
+.database-url
+

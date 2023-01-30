@@ -4,11 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npm run nps db.gen-schema barrels build",
-    "start": "NODE_ENV=production node -r module-alias/register dist",
     "nps": "nps",
-    "prepare": "husky install",
-    "setup": "pnpm 2> /dev/null || npm i -g pnpm && pnpm i"
+    "prepare": "is-docker || husky install",
+    "setup": "pnpm 2> /dev/null || npm i -g pnpm && pnpm i",
+    "start": "NODE_ENV=production node -r module-alias/register dist"
   },
   "author": "r1oga",
   "license": "ISC",
@@ -34,7 +33,6 @@
     "barrelsby": "^2.5.1",
     "concurrently": "^7.6.0",
     "dotenv-cli": "^7.0.0",
-    "express": "^4.18.2",
     "husky": "^8.0.2",
     "is-ci": "^3.0.1",
     "jest": "^29.3.1",
@@ -47,14 +45,12 @@
     "jest-watch-select-projects": "^2.0.0",
     "jest-watch-typeahead": "^2.2.1",
     "lint-staged": "^13.1.0",
-    "module-alias": "^2.2.2",
     "nps": "^5.10.0",
     "prisma": "^4.9.0",
     "supertest": "^6.3.3",
     "ts-jest": "^29.0.3",
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.1.0",
-    "tslib": "^2.4.1",
     "typescript": "^4.9.4",
     "yargs": "^17.6.2"
   },
@@ -75,9 +71,13 @@
     "@octokit/plugin-paginate-graphql": "^2.0.1",
     "@prisma/client": "^4.9.0",
     "cross-fetch": "^3.1.5",
+    "express": "^4.18.2",
     "express-async-errors": "^3.1.1",
     "express-validator": "^6.14.2",
+    "is-docker": "^3.0.0",
+    "module-alias": "^2.2.2",
     "reflect-metadata": "^0.1.13",
+    "tslib": "^2.5.0",
     "typedi": "^0.10.0"
   }
 }

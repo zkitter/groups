@@ -18,3 +18,8 @@ export const split = (arr: string[]) => {
   }
   return chunks
 }
+
+export const filterSpaces =
+  (minFollowers: number) =>
+  ({ followers }: any) =>
+    followers !== undefined && followers >= minFollowers

@@ -1,5 +1,5 @@
 import { Org } from '@prisma/client'
-import { OrgData, Space } from '../../types'
+import { OrgData, Space } from 'types'
 
 export default interface WhitelistServiceInterface {
   getSpaces: ({
