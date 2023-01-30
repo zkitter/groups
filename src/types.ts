@@ -15,3 +15,8 @@ export interface OrgData {
   ghName: string
   repos: string[]
 }
+
+export interface UserData {
+  ghName: string
+  repos: string[]
+}

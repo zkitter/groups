@@ -22,6 +22,7 @@ export default interface WhitelistServiceInterface {
     minFollowers?: number
   }) => Promise<Record<string, OrgData>>
   unWhitelist: (ghNameOrSnapshotId: string) => Promise<Org>
+  getWhitelistShort: () => Promise<string[]>
   getWhitelist: (format: 'short' | 'long') => Promise<OrgData[] | string[]>
   refresh: () => Promise<OrgData[]>
 }

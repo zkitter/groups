@@ -37,3 +37,9 @@ export const validate = async (req: Request, res: Response) => {
   await Promise.all(validations.map(async (validation) => validation.run(req)))
   return validationResult(req)
 }
+
+export const intersect = (a: string[], b: string[]) => {
+  const setA = new Set(a)
+  const setB = new Set(b)
+  return new Set([...setA].filter((x) => setB.has(x))).size > 0
+}

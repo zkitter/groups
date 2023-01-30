@@ -93,12 +93,16 @@ export class WhitelistService implements WhitelistServiceInterface {
     return orgs
   }
 
-  async getWhitelist(format: 'short' | 'long' = 'short') {
+  async getWhitelistShort() {
     const orgs = await this.db.findAllWhitelistedOrgs()
-    if (format === 'long') return orgs
     return orgs
       .map(({ ghName, repos }) => repos.map((repo) => `${ghName}/${repo}`))
       .flat()
+  }
+
+  async getWhitelist(format: 'short' | 'long' = 'short') {
+    if (format === 'long') return this.db.findAllWhitelistedOrgs()
+    return this.getWhitelistShort()
   }
 
   async refresh() {

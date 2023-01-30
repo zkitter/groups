@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { Service } from 'typedi'
 import { Db } from 'db/prisma'
-import { OrgData } from 'types'
+import { OrgData, UserData } from 'types'
 
 import MongoRepositoryInterface from './interface'
 
@@ -48,5 +48,31 @@ export class MongoRepository implements MongoRepositoryInterface {
 
   async upsertOrgs(orgs: OrgData[]): Promise<OrgData[]> {
     return this.db.$transaction(orgs.map((org) => this.upsertOrg(org)))
+  }
+
+  async findUser(ghName: string) {
+    return this.db.user.findUnique({
+      select: {
+        ghName: true,
+        repos: true,
+      },
+      where: { ghName },
+    })
+  }
+
+  async upsertUser(user: UserData) {
+    return this.db.user.upsert({
+      create: user,
+      select: {
+        ghName: true,
+        repos: true,
+      },
+      update: {
+        repos: user.repos,
+      },
+      where: {
+        ghName: user.ghName,
+      },
+    })
   }
 }

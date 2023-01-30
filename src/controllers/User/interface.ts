@@ -1,8 +1,6 @@
-import { User } from '@prisma/client'
-import { Response } from 'express'
+import { Request, Response } from 'express'
 
 export default interface UserControllerInterface {
-  refresh: (_: Request, res: Response) => Promise<User>
-  belongsToContributorGroup: (req: Request) => Promise<boolean>
-  belongsToVotersGroup: (req: Request) => Promise<boolean>
+  refresh: (_: Request, res: Response) => Promise<void>
+  getGroups: (req: Request, res: Response) => Promise<void>
 }
