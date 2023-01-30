@@ -10,9 +10,9 @@ Under the hood, it:
 
 ## API
 
-| METHOD | PATH                    | DESCRIPTION                                                               | RESPONSE                                                                                                                        |
-| ------ | ----------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| GET    | /whitelist              | Get list of whitelisted organizations                                     | `Array<{ followers: number, followers7d?: number, snapshotId: string, snapshotName: string, ghName: string, repos: string[] }>` |
-| GET    | /whitelist/refresh      | Update list of whitelisted orgs and their repos. Return updated whitelist | `Array<{ followers: number, followers7d?: number, snapshotId: string, snapshotName: string, ghName: string, repos: string[] }>` |
-| GET    | /user/:username         | Get groups a user is part of                                              | `{ belongsToGhContributorsGroup: boolean, belongsToDaoVotersGroups: boolean }`                                                  |
-| GET    | /user/:username/refresh | Update list of repos a user contributed to and return updated user        | `{ ghName: string, repos: string[]}`                                                                                            |
+| METHOD | PATH                      | DESCRIPTION                                                               | RESPONSE                                                                                                                        |
+| ------ | ------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| GET    | `/whitelist`              | Get list of whitelisted organizations                                     | `Array<{ followers: number, followers7d?: number, snapshotId: string, snapshotName: string, ghName: string, repos: string[] }>` |
+| GET    | `/whitelist/refresh`      | Update list of whitelisted orgs and their repos. Return updated whitelist | `Array<{ followers: number, followers7d?: number, snapshotId: string, snapshotName: string, ghName: string, repos: string[] }>` |
+| GET    | `/user/:username`         | Get groups a user is part of                                              | `{ belongsToGhContributorsGroup: boolean, belongsToDaoVotersGroups: boolean }`                                                  |
+| GET    | `/user/:username/refresh` | Update list of repos a user contributed to and return updated user        | `{ ghName: string, repos: string[]}`                                                                                            |
