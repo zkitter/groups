@@ -14,3 +14,4 @@ coverage
 .gh-pat
 .database-url
 
+.env.dev

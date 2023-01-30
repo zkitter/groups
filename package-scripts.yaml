@@ -75,8 +75,11 @@ scripts:
       script: node --inspect-brk ./node_modules/jest/bin/jest --runInBand --watch --config test/jest.unit.ts
       description: Start tests in debug mode (open in chrome://inspect)
     once:
-      script: jest --config test/jest.config.ts
+      script: dotenv -e .env.test -- jest --config test/jest.config.ts
       description: Run tests (once, coverage)
+    integration:
+      script: dotenv -e .env.test -- jest --config test/jest.config.ts --selectProjects integration --coverage=false
+      description: Run e2e tests
     e2e:
       script: dotenv -e .env.test -- jest --config test/jest.config.ts --selectProjects e2e --coverage=false
       description: Run e2e tests
