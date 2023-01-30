@@ -1,11 +1,8 @@
 name: Deployment - Staging
 on:
   workflow_dispatch:
-  push:
-    branches: [staging]
-    paths: ['src', 'prisma', 'Dockerfile-deploy', 'fly-staging.toml', '*.json']
   pull_request:
-    branches: [staging]
+    branches: [main, staging]
     paths: ['src', 'prisma', 'Dockerfile-deploy', 'fly-staging.toml', '*.json']
 
 env:
@@ -44,4 +41,4 @@ jobs:
 
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Deploy
-        run: flyctl deploy --config fly-staging.toml --dockerfile Dockerfile-deploy
+        run: flyctl deploy --config fly-${{github.base_ref}}.toml --dockerfile Dockerfile-deploy
