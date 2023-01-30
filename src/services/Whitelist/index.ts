@@ -95,6 +95,10 @@ export class WhitelistService implements WhitelistServiceInterface {
     return orgs
   }
 
+  async findAllWhitelistedOrgs(): Promise<OrgData[]> {
+    return this.db.findAllWhitelistedOrgs()
+  }
+
   async refresh(): Promise<OrgData[]> {
     const orgs = await this.getOrgsWithRepos()
     return this.db.upsertOrgs(Object.values(orgs))
