@@ -11,4 +11,9 @@ export class WhitelistController implements WhitelistControllerInterface {
     const orgs = await this.whitelistService.refresh()
     res.json(orgs)
   }
+
+  async findAllWhitelistedOrgs(_: Request, res: Response) {
+    const orgs = await this.whitelistService.findAllWhitelistedOrgs()
+    res.json(orgs)
+  }
 }

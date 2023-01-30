@@ -6,7 +6,13 @@ import { WhitelistController } from './controllers/Whitelist'
 const app: Express = express()
 const whitelistController = Container.get(WhitelistController)
 
-// eslint-disable-next-line @typescript-eslint/no-misused-promises
-app.get('/whitelist', whitelistController.refresh.bind(whitelistController))
+app.get(
+  '/whitelist',
+  whitelistController.findAllWhitelistedOrgs.bind(whitelistController),
+)
+app.get(
+  '/whitelist/refresh',
+  whitelistController.refresh.bind(whitelistController),
+)
 
 export { app }

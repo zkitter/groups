@@ -13,6 +13,18 @@ export class MongoRepository implements MongoRepositoryInterface {
     this.db = db.prisma
   }
 
+  async findAllWhitelistedOrgs() {
+    return this.db.org.findMany({
+      select: {
+        followers: true,
+        ghName: true,
+        repos: true,
+        snapshotId: true,
+        snapshotName: true,
+      },
+    })
+  }
+
   upsertOrg(org: OrgData) {
     return this.db.org.upsert({
       create: org,
