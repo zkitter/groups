@@ -1,5 +1,6 @@
 import 'express-async-errors'
 import express, { Express } from 'express'
+import { query } from 'express-validator'
 import { Container } from 'typedi'
 import { WhitelistController } from './controllers/Whitelist'
 
@@ -8,7 +9,8 @@ const whitelistController = Container.get(WhitelistController)
 
 app.get(
   '/whitelist',
-  whitelistController.findAllWhitelistedOrgs.bind(whitelistController),
+  query('format').default('short').exists().isString().isIn(['long', 'short']),
+  whitelistController.getWhitelist.bind(whitelistController),
 )
 app.get(
   '/whitelist/refresh',

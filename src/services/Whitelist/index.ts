@@ -24,7 +24,7 @@ export class WhitelistService implements WhitelistServiceInterface {
       maxOrgs?: number
       minFollowers?: number
     } = { maxOrgs: 100, minFollowers: 10_000 },
-  ): Promise<Record<string, Space>> {
+  ) {
     const spaces = await this.snapshot.getSpaces()
 
     return Object.entries(spaces)
@@ -51,9 +51,7 @@ export class WhitelistService implements WhitelistServiceInterface {
       }, {})
   }
 
-  async getGhOrgs(
-    snapshotNames: string[],
-  ): Promise<Array<{ ghName: string; snapshotId: string }>> {
+  async getGhOrgs(snapshotNames: string[]) {
     const spaces = await this.snapshot.getGhOrgsBySpaceIds(snapshotNames)
     return spaces.reduce<Array<{ ghName: string; snapshotId: string }>>(
       (spaces, space) => {
@@ -73,7 +71,7 @@ export class WhitelistService implements WhitelistServiceInterface {
       maxOrgs?: number
       minFollowers?: number
     } = { maxOrgs: 100, minFollowers: 10_000 },
-  ): Promise<Record<string, OrgData>> {
+  ) {
     const spaces = await this.getSpaces({ maxOrgs, minFollowers })
     const orgs: Record<string, OrgData> = {}
 
@@ -95,11 +93,15 @@ export class WhitelistService implements WhitelistServiceInterface {
     return orgs
   }
 
-  async findAllWhitelistedOrgs(): Promise<OrgData[]> {
-    return this.db.findAllWhitelistedOrgs()
+  async getWhitelist(format: 'short' | 'long' = 'short') {
+    const orgs = await this.db.findAllWhitelistedOrgs()
+    if (format === 'long') return orgs
+    return orgs
+      .map(({ ghName, repos }) => repos.map((repo) => `${ghName}/${repo}`))
+      .flat()
   }
 
-  async refresh(): Promise<OrgData[]> {
+  async refresh() {
     const orgs = await this.getOrgsWithRepos()
     return this.db.upsertOrgs(Object.values(orgs))
   }
