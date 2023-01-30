@@ -38,9 +38,9 @@ describe('UserService', () => {
       })
       whitelist.getWhitelistShort.mockResolvedValueOnce(['A/a'])
 
-      await expect(userService.belongsToContributorsGroup('foo')).resolves.toBe(
-        true,
-      )
+      await expect(
+        userService.belongsToGhContributorsGroup('foo'),
+      ).resolves.toBe(true)
 
       expect(db.findUser).toHaveBeenCalledOnceWith('foo')
       expect(whitelist.getWhitelistShort).toHaveBeenCalledOnce()
@@ -53,9 +53,9 @@ describe('UserService', () => {
       })
       whitelist.getWhitelistShort.mockResolvedValueOnce(['C/a'])
 
-      await expect(userService.belongsToContributorsGroup('foo')).resolves.toBe(
-        false,
-      )
+      await expect(
+        userService.belongsToGhContributorsGroup('foo'),
+      ).resolves.toBe(false)
 
       expect(db.findUser).toHaveBeenCalledOnceWith('foo')
       expect(whitelist.getWhitelistShort).toHaveBeenCalledOnce()

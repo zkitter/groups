@@ -1,5 +1,7 @@
 {
   "directory": [
+    "src/controllers",
+    "src/errors",
     "src/repositories",
     "src/repositories/Github/queries",
     "src/repositories/Snapshot/queries",

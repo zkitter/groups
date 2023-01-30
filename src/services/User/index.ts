@@ -17,7 +17,7 @@ export class UserService implements UserServiceInterface {
     return repos.map(({ name, org }) => `${org}/${name}`)
   }
 
-  async belongsToContributorsGroup(ghName: string): Promise<boolean> {
+  async belongsToGhContributorsGroup(ghName: string): Promise<boolean> {
     const user = await this.db.findUser(ghName)
     if (user !== null) {
       const whitelistedRepos = await this.whitelist.getWhitelistShort()
