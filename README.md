@@ -8,19 +8,11 @@ Under the hood, it:
 3. For each of the org repository, it fetches the list of contributors between a `since` and `until`timestamps (default between now and now - 1 month).
 4. Returns the list of unique contributors, removing potential bots (e.g dependencies, github action bots etc...)
 
-## Usage
+## API
 
-You need to have a GH Personal Access Token (scopes: `public_repo`, `read:user`) defined as environment variables.
-
-### Scripts
-
-- fetch spaces: `nps 'fetch.spaces -m <min followers amount> -s <group size>`
-- fetch group of gh users: `nps fetch.ghgroup`
-
-### Node
-
-```
-import { getCommittersGroup } from './src/gh/get-commiters-group'
-
-const group = await getCommittersGroup()
-```
+| METHOD | PATH                    | DESCRIPTION                                                               | RESPONSE                                                                                                                        |
+| ------ | ----------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| GET    | /whitelist              | Get list of whitelisted organizations                                     | `Array<{ followers: number, followers7d?: number, snapshotId: string, snapshotName: string, ghName: string, repos: string[] }>` |
+| GET    | /whitelist/refresh      | Update list of whitelisted orgs and their repos. Return updated whitelist | `Array<{ followers: number, followers7d?: number, snapshotId: string, snapshotName: string, ghName: string, repos: string[] }>` |
+| GET    | /user/:username         | Get groups a user is part of                                              | `{ belongsToGhContributorsGroup: boolean, belongsToDaoVotersGroups: boolean }`                                                  |
+| GET    | /user/:username/refresh | Update list of repos a user contributed to and return updated user        | `{ ghName: string, repos: string[]}`                                                                                            |
