@@ -11,7 +11,7 @@ services:
       - database-url
       - gh-pat
     ports:
-      - '3000:3000'
+      - '8080:8080'
 
 secrets:
   gh-pat:
