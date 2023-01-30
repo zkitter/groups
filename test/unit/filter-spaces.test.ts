@@ -1,4 +1,4 @@
-import { filterSpaces } from 'snapshot/get-spaces'
+import { filterSpaces } from '../../src/utils'
 
 describe('filterSpaces', () => {
   const SPACE = { snapshotId: 'space.eth', snapshotName: 'space' }

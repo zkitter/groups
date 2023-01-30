@@ -1,10 +1,6 @@
 import { Space } from 'types'
 import { URLS } from '../constants'
-
-export const filterSpaces =
-  (minFollowers: number) =>
-  ({ followers }: any) =>
-    followers !== undefined && followers >= minFollowers
+import { filterSpaces } from '../utils'
 
 export const getSpaces =
   (

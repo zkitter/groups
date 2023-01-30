@@ -4,9 +4,8 @@ import {
   MongoRepository,
   SnapshotRepository,
 } from 'repositories'
-import { filterSpaces } from '../../snapshot/get-spaces'
-import { OrgData, Space } from '../../types'
-import { split } from '../../utils'
+import { OrgData, Space } from 'types'
+import { filterSpaces, split } from 'utils'
 import WhitelistServiceInterface from './interface'
 
 @Service()

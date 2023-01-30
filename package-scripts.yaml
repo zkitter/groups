@@ -4,7 +4,7 @@ scripts:
     hiddenFromHelp: true
 
   build:
-    script: nps clean compile
+    script: nps clean db.gen-schema barrels compile
     description: Build project
 
   clean:

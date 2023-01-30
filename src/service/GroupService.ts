@@ -1,7 +1,6 @@
 import { Service } from 'typedi'
 import { GithubRepository, SnapshotRepository } from 'repositories'
-import { ArraySet, minusOneMonth, notBot, split } from 'utils'
-import { filterSpaces } from '../snapshot/get-spaces'
+import { ArraySet, filterSpaces, minusOneMonth, notBot, split } from 'utils'
 import { Space } from '../types'
 
 @Service()
