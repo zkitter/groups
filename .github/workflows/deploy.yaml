@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   pull_request:
     branches: [main, staging]
-    paths: ['src', 'prisma', 'Dockerfile-deploy', 'fly-staging.toml', '*.json']
+    paths: ['src/**', 'prisma/**', 'Dockerfile-deploy', '*.toml', '*.json']
 
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
