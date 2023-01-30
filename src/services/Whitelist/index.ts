@@ -101,8 +101,7 @@ export class WhitelistService implements WhitelistServiceInterface {
   }
 
   async getWhitelist(format: 'short' | 'long' = 'short') {
-    const orgs = await this.db.findAllWhitelistedOrgs()
-    if (format === 'long') return orgs
+    if (format === 'long') return this.db.findAllWhitelistedOrgs()
     return this.getWhitelistShort()
   }
 

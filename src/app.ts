@@ -7,10 +7,11 @@ const app: Express = express()
 const whitelistController = Container.get(WhitelistController)
 const userController = Container.get(UserController)
 
-app.get(
+app.use(
   '/whitelist',
-  query('format').default('short').exists().isString().isIn(['long', 'short']),
-  whitelistController.getWhitelist.bind(whitelistController),
+  Router()
+    .get('', whitelistController.getWhitelist.bind(whitelistController))
+    .get('/refresh', whitelistController.refresh.bind(whitelistController)),
 )
 
 app.use(

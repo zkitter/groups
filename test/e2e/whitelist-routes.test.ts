@@ -35,28 +35,7 @@ describe('refresh handler', () => {
       })
     })
 
-    describe('returns 400 if', () => {
-      it('format is not provided', async () => {
-        const { body } = await request(app).get('/whitelist').send()
-        expect(body.message).toMatchInlineSnapshot(`undefined`)
-      })
-
-      it('format is not a string', async () => {
-        const { body } = await request(app).get('/whitelist?format=1').send()
-        expect(body.message).toMatchInlineSnapshot(`undefined`)
-      })
-
-      it('format is not "long" or "short"', async () => {
-        const { body } = await request(app)
-          .get('/whitelist?format=longer')
-          .send()
-        expect(body.message).toMatchInlineSnapshot(`undefined`)
-      })
-    })
-
     it('GET /whitelist/refresh: should update and return the list of whitelisted orgs', async () => {
-      const whitelistService = Container.get(WhitelistService)
-      const mongoRepository = Container.get(MongoRepository)
       jest.spyOn(whitelistService, 'refresh')
       jest.spyOn(mongoRepository, 'upsertOrgs')
 
