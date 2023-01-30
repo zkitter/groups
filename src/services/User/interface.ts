@@ -1,8 +1,8 @@
-import { User } from '@prisma/client'
+import { UserData } from '../../types'
 
 export default interface UserServiceInterface {
-  hasCommittedToSomeWhiteListedRepo: (username: string) => Promise<boolean>
-  hasVotedToSomeWhitelistedDao: (username: string) => Promise<boolean>
-  addUser: (user: User) => Promise<User>
-  updateUser: (user: User) => Promise<User>
+  getContributedRepos: (username: string) => Promise<string[]>
+  belongsToContributorsGroup: (username: string) => Promise<boolean>
+  belongsToVotersGroup: (username: string) => Promise<boolean>
+  refresh: (username: string) => Promise<UserData>
 }

@@ -23,8 +23,8 @@ export const split = (arr: string[]) => {
 
 export const filterSpaces =
   (minFollowers: number) =>
-    ({ followers }: any) =>
-      followers !== undefined && followers >= minFollowers
+  ({ followers }: any) =>
+    followers !== undefined && followers >= minFollowers
 
 const validations = [
   body('maxOrgs').if(body('maxOrgs').exists()).isInt(),
