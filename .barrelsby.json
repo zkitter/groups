@@ -2,7 +2,8 @@
   "directory": [
     "src/repositories",
     "src/repositories/Github/queries",
-    "src/repositories/Snapshot/queries"
+    "src/repositories/Snapshot/queries",
+    "src/services"
   ],
   "delete": true,
   "noSemicolon": true,
