@@ -7,12 +7,13 @@ import UserControllerInterface from './interface'
 export class UserController implements UserControllerInterface {
   constructor(readonly userService: UserService) {}
 
-  async getGroups(req: Request, res: Response) {
+  async getUser(req: Request, res: Response) {
     const { username } = req.params
-    const [belongsToGhContributorsGroup] = await Promise.all([
-      this.userService.belongsToGhContributorsGroup(username),
-    ])
-    res.json({ belongsToGhContributorsGroup })
+    const user = await this.userService.getUser(
+      username,
+      req.query.format as 'short' | 'long',
+    )
+    res.json(user)
   }
 
   async refresh(req: Request, res: Response) {

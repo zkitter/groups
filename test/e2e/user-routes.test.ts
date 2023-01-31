@@ -9,12 +9,23 @@ describe('UserController', () => {
   const mongoRepository = Container.get(MongoRepository)
 
   describe('GET /user/:username', () => {
-    it('returns object describing the groups the users belongs to', async () => {
+    it('returns user in short format by default', async () => {
       const { body } = await request(app).get('/user/r1oga').send()
 
       expect(body).toMatchObject({
         belongsToGhContributorsGroup: expect.any(Boolean),
       })
+    })
+
+    it('can return user in long format', async () => {
+      const { body } = await request(app).get('/user/r1oga?format=long').send()
+
+      expect(body).toMatchObject({
+        belongsToGhContributorsGroup: expect.any(Boolean),
+        ghName: 'r1oga',
+        repos: expect.any(Array),
+      })
+      expect(body.repos).toInclude('zkitter/groups')
     })
   })
 
@@ -29,7 +40,7 @@ describe('UserController', () => {
       expect(mongoRepository.upsertUser).toHaveBeenCalledOnce()
       expect(body).toMatchObject({
         ghName: 'r1oga',
-        repos: expect.any(Array<string>),
+        repos: expect.any(Array),
       })
       expect(body.repos).toInclude('zkitter/groups')
     })
