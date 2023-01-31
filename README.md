@@ -1,4 +1,4 @@
-# GH Groups
+# Zkitter Groups
 
 Get list of GH users who contributed to the GitHub org of a given group of DAOs.  
 Under the hood, it:
