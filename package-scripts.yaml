@@ -1,6 +1,10 @@
 scripts:
+  barrels:
+    script: barrelsby -c .barrelsby.json
+    hiddenFromHelp: true
+
   build:
-    script: nps clean compile
+    script: nps clean db.gen-schema barrels compile
     description: Build project
 
   clean:
@@ -10,6 +14,11 @@ scripts:
   compile:
     script: tsc -p tsconfig.compile.json
     hiddenFromHelp: true
+
+  db:
+    gen-schema:
+      script: pnpx prisma generate
+      hiddenFromHelp: true
 
   fix:
     default:
@@ -46,7 +55,7 @@ scripts:
 
   start:
     default:
-      script: nps build start.prod
+      script: nps db.gen-schema barrels build start.prod
       description: Start in production mode
     dev:
       script: tsnd --cls --exit-child --ignore-watch node_modules --quiet  --respawn --rs --transpile-only -r tsconfig-paths/register src
@@ -60,14 +69,20 @@ scripts:
       script: nps 'test.once --watch --coverage=false'
       description: Run tests (watch, no coverage)
     ci:
-      script: jest --config test/jest.config.ts --selectProjects unit integration --silent --reporters=jest-silent-reporter
+      script: jest --config test/jest.config.ts --selectProjects unit integration e2e --silent --reporters=jest-silent-reporter
       hiddenFromHelp: true
     debug:
       script: node --inspect-brk ./node_modules/jest/bin/jest --runInBand --watch --config test/jest.unit.ts
       description: Start tests in debug mode (open in chrome://inspect)
     once:
-      script: jest --config test/jest.config.ts
+      script: dotenv -e .env.test -- jest --config test/jest.config.ts
       description: Run tests (once, coverage)
+    integration:
+      script: dotenv -e .env.test -- jest --config test/jest.config.ts --selectProjects integration --coverage=false
+      description: Run e2e tests
+    e2e:
+      script: dotenv -e .env.test -- jest --config test/jest.config.ts --selectProjects e2e --coverage=false
+      description: Run e2e tests
 
   validate:
     default:

@@ -1,0 +1,14 @@
+{
+  "name": "Snapshot.org GraphQL Schema",
+  "extensions": {
+    "endpoints": {
+      "snapshot": {
+        "url": "https://hub.snapshot.org/graphql",
+        "headers": {
+          "user-agent": "JS GraphQL"
+        },
+        "introspect": true
+      }
+    }
+  }
+}

@@ -43,9 +43,13 @@ jobs:
       - name: Install
         run: pnpm i --ignore-scripts --reporter=silent
 
+      - name: Generate prisma models
+        run: pnpm run nps db.gen-schema
+
       - name: Test
         env:
           GH_PAT: ${{ secrets.GITHUB_TOKEN }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
           TZ: UTC
         run: pnpm run nps t.ci
 

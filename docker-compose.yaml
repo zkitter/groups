@@ -1,0 +1,20 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+    environment:
+      DATABASE_URL_FILE: /run/secrets/database-url
+      GH_PAT_FILE: /run/secrets/gh-pat
+    secrets:
+      - database-url
+      - gh-pat
+    ports:
+      - '8080:8080'
+
+secrets:
+  gh-pat:
+    file: .gh-pat
+  database-url:
+    file: .database-url

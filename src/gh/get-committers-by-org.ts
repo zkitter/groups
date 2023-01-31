@@ -1,9 +1,7 @@
 import { ok } from 'assert'
-import committersQuery from 'graphql/committers-query'
-import { ArraySet } from 'utils'
+import { committersByOrgQuery } from 'repositories/Github/queries'
+import { ArraySet, parseDate } from 'utils'
 import { URLS } from '../constants'
-
-const parseDate = (date: Date) => date.toISOString().split('.')[0] + 'Z'
 
 export const getCommittersByOrg = async ({
   org,
@@ -17,7 +15,7 @@ export const getCommittersByOrg = async ({
   ok(process.env.GH_PAT, 'GH_PAT is not defined')
   const res = await fetch(URLS.GH_SQL, {
     body: JSON.stringify({
-      query: committersQuery,
+      query: committersByOrgQuery,
       variables: {
         login: org,
         since: parseDate(since),

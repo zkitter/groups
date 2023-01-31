@@ -1,4 +1,6 @@
 import type { JestConfigWithTsJest } from 'ts-jest'
+import { pathsToModuleNameMapper } from 'ts-jest'
+import { compilerOptions } from '../tsconfig.json'
 
 import common from './jest.common'
 
@@ -16,8 +18,11 @@ const jestUnitConfig: JestConfigWithTsJest = {
   displayName: 'unit',
   moduleDirectories: ['node_modules', '<rootDir>/src'],
   moduleFileExtensions: ['js', 'ts'],
+  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
+    prefix: '<rootDir>/src',
+  }),
   preset: 'ts-jest',
-  setupFilesAfterEnv: ['jest-chain', './test/setup.ts'],
+  setupFilesAfterEnv: ['jest-extended/all', 'jest-chain', './test/setup.ts'],
   testRegex: 'test/unit/.*\\.test\\.ts$',
 }
 

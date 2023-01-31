@@ -1,5 +1,5 @@
-import spacesGqlQuery from 'graphql/spaces-gql-query'
-import { CHUNK_SIZE, URLS } from '../constants'
+import { CHUNK_SIZE, URLS } from '#'
+import { spacesQuery } from 'repositories/Snapshot/queries'
 import { getSpaces } from './get-spaces'
 
 const split = (arr: string[]) => {
@@ -13,7 +13,7 @@ const split = (arr: string[]) => {
 const getChunk = async (ids: string[]) => {
   const res = await fetch(URLS.SNAPSHOT_GQL, {
     body: JSON.stringify({
-      query: spacesGqlQuery,
+      query: spacesQuery,
       variables: { id_in: ids },
     }),
     headers: {

@@ -10,3 +10,8 @@ coverage
 .idea
 
 .env
+.env.test
+.gh-pat
+.database-url
+
+.env.dev
