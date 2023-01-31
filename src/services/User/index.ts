@@ -1,6 +1,7 @@
 import { Service } from 'typedi'
 import { GithubRepository, MongoRepository } from 'repositories'
-import { intersect } from '../../utils'
+import { GroupsData, UserData } from 'types'
+import { intersect } from 'utils'
 import { WhitelistService } from '../Whitelist'
 import UserServiceInterface from './interface'
 
@@ -17,8 +18,7 @@ export class UserService implements UserServiceInterface {
     return repos.map(({ name, org }) => `${org}/${name}`)
   }
 
-  async belongsToGhContributorsGroup(ghName: string): Promise<boolean> {
-    const user = await this.db.findUser(ghName)
+  async belongsToGhContributorsGroup(user: UserData | null): Promise<boolean> {
     if (user !== null) {
       const whitelistedRepos = await this.whitelist.getWhitelistShort()
       return intersect(whitelistedRepos, user.repos)
@@ -26,8 +26,22 @@ export class UserService implements UserServiceInterface {
     return false
   }
 
-  async belongsToVotersGroup(ghName: string): Promise<boolean> {
+  async belongsToVotersGroup(user: UserData | null): Promise<boolean> {
     return Promise.resolve(false)
+  }
+
+  async getGroups(user: UserData | null): Promise<GroupsData> {
+    const [belongsToGhContributorsGroup] = await Promise.all([
+      this.belongsToGhContributorsGroup(user),
+    ])
+    return { belongsToGhContributorsGroup }
+  }
+
+  async getUser(ghName: string, format: 'short' | 'long' = 'short') {
+    const user = await this.db.findUser(ghName)
+    const groups = await this.getGroups(user)
+    if (format === 'short') return groups
+    return { ...groups, ...user }
   }
 
   async refresh(ghName: string) {

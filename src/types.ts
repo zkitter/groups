@@ -20,3 +20,7 @@ export interface UserData {
   ghName: string
   repos: string[]
 }
+
+export interface GroupsData {
+  belongsToGhContributorsGroup: boolean
+}
