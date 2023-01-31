@@ -31,7 +31,7 @@ const html = `
         </tr>
         <tr>
           <td>GET</td>
-          <td>/user/:username</td>
+          <td>/user/:username?format=short|long</td>
           <td>Get user <code>username</code> in <code>short</code> (only groups info) or <code>long</code> (with repos) format</td>
         </tr>
         <tr>
