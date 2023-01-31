@@ -17,7 +17,7 @@ app.use(
 app.use(
   '/user',
   Router()
-    .get('/:username', userController.getGroups.bind(userController))
+    .get('/:username', userController.getUser.bind(userController))
     .get('/:username/refresh', userController.refresh.bind(userController)),
 )
 
