@@ -1,18 +1,19 @@
 import 'express-async-errors'
+import cors from 'cors'
 import express, { Express, Router } from 'express'
+import swaggerUi from 'swagger-ui-express'
 import { Container } from 'typedi'
-import {
-  HomeController,
-  UserController,
-  WhitelistController,
-} from './controllers'
+import { UserController, WhitelistController } from './controllers'
+import openApiSpecs from './openapi.json'
 
 const app: Express = express()
-const homeController = Container.get(HomeController)
 const whitelistController = Container.get(WhitelistController)
 const userController = Container.get(UserController)
 
-app.get('/', homeController.home.bind(HomeController))
+app.use(cors())
+
+app.use('/', swaggerUi.serve)
+app.get('/', swaggerUi.setup(openApiSpecs))
 
 app.use(
   '/whitelist',

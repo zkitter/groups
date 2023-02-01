@@ -1,0 +1,215 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Zkitter Groups - OpenAPI 3.0",
+    "description": "This is a sample Pet Store Server based on the OpenAPI 3.0 specification. \n\n[GitHub](https://github.com/zkitter/groups)",
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/zkitter/groups/blob/main/LICENSE"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://zkitter-groups.fly.dev/"
+    },
+    {
+      "url": "https://zkitter-groups-staging.fly.dev/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "whitelist",
+      "description": "Whitelisted Organizations"
+    },
+    {
+      "name": "user",
+      "description": "GitHub User"
+    }
+  ],
+  "paths": {
+    "/user/{username}": {
+      "get": {
+        "tags": ["user"],
+        "summary": "Get user by GitHub login/username",
+        "description": "",
+        "operationId": "getUserByGhName",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "description": "The GitHub login that needs to be fetched.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "description": "response format",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["short", "long"],
+              "example": "long",
+              "default": "short"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{username}/refresh": {
+      "get": {
+        "tags": ["user"],
+        "summary": "Update list of repos the user contributed.",
+        "description": "",
+        "operationId": "refreshUserByGhName",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "description": "The GitHub login that needs to be refreshed.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/whitelist": {
+      "get": {
+        "tags": ["whitelist"],
+        "summary": "Get whitelisted organizations.",
+        "description": "",
+        "operationId": "getWhitelist",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "query",
+            "description": "response format",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["short", "long"],
+              "example": "long",
+              "default": "short"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "sucessful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Org"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/whitelist/refresh": {
+      "get": {
+        "tags": ["whitelist"],
+        "summary": "Update list of whitelisted orgs and their repos.",
+        "description": "",
+        "operationId": "refreshWhitelist",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "required": ["belongsToGhContributorsGroup"],
+        "type": "object",
+        "properties": {
+          "belongsToGhContributorsGroup": {
+            "type": "boolean",
+            "example": true
+          },
+          "ghName": {
+            "type": "string",
+            "example": "r1oga"
+          },
+          "repos": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Org": {
+        "type": "object",
+        "properties": {
+          "ghName": {
+            "type": "string",
+            "example": "stargate-protocol"
+          },
+          "snapshotId": {
+            "type": "string",
+            "example": "stgdao.eth"
+          },
+          "snapshotName": {
+            "type": "string",
+            "example": "Stargate DAO"
+          },
+          "followers": {
+            "type": "number",
+            "example": 10000
+          },
+          "repos": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": ["treasure-docs", "treasure-subgraph"]
+            }
+          }
+        }
+      }
+    }
+  }
+}
