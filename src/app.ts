@@ -12,8 +12,15 @@ const userController = Container.get(UserController)
 
 app.use(cors())
 
+app.use(express.static('public'))
 app.use('/', swaggerUi.serve)
-app.get('/', swaggerUi.setup(openApiSpecs))
+app.get(
+  '/',
+  swaggerUi.setup(openApiSpecs, {
+    customfavIcon: '/favicon.ico',
+    customSiteTitle: 'Zkitter Groups API',
+  }),
+)
 
 app.use(
   '/whitelist',
