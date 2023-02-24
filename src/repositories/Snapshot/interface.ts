@@ -6,5 +6,5 @@ export default interface SnapshotRepositoryInterface {
   getVoters: (
     ids: string[],
     { since, until }: { since?: Date; until?: Date },
-  ) => Promise<string[]>
+  ) => Promise<Record<string, string[]>>
 }

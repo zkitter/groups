@@ -1,6 +1,7 @@
 import { Service } from 'typedi'
 import { URLS } from '#'
-import { ArraySet, getTime, minusOneMonth } from 'utils'
+import { getTime, minusOneMonth } from 'utils'
+import { VoteResponse, Votes } from '../../types'
 import SnapshotRepositoryInterface from './interface'
 import { spacesQuery, votersQuery } from './queries'
 
@@ -62,8 +63,17 @@ export class SnapshotRepository implements SnapshotRepositoryInterface {
       space_in: ids,
     })
 
-    return ArraySet(
-      (data.votes as Array<{ voter: string }>).map(({ voter }) => voter),
+    return (data.votes ?? ([] as VoteResponse[])).reduce(
+      (voters: Votes, vote: VoteResponse) => {
+        const {
+          space: { id: snapshotId },
+          voter,
+        } = vote
+        if (voters[snapshotId] === undefined) voters[snapshotId] = new Set()
+        voters[snapshotId].add(voter)
+        return voters
+      },
+      {},
     )
   }
 }

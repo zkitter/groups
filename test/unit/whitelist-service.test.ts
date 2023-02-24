@@ -90,7 +90,7 @@ describe('WhitelistService', () => {
     ])
   })
 
-  it('getOrgs: return list of orgs', async () => {
+  it('getOrgsWithReposAndVoters: return list of orgs that includes repos and voters', async () => {
     snapshot.getSpaces.mockResolvedValue(SPACES)
     snapshot.getGhOrgsBySpaceIds.mockResolvedValueOnce([
       { ghName: 'a', snapshotId: 'a.eth' },
@@ -100,12 +100,16 @@ describe('WhitelistService', () => {
       },
       { ghName: 'c', snapshotId: 'c.eth' },
     ])
+    snapshot.getVoters.mockResolvedValueOnce({
+      'a.eth': ['0xfoo1', '0xfoo2'],
+      'b.eth': ['0xbar'],
+    })
     gh.getReposByOrg
       .mockResolvedValueOnce(['repo-aa', 'repo-ab'])
       .mockResolvedValueOnce(['repo-ba', 'repo-bb'])
       .mockResolvedValueOnce(['repo-ca'])
 
-    await expect(whitelistService.getOrgsWithRepos()).resolves
+    await expect(whitelistService.getOrgsWithReposAndVoters()).resolves
       .toMatchInlineSnapshot(`
       {
         "a.eth": {

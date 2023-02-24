@@ -43,9 +43,13 @@ describe('SnapshotRepository', () => {
   it('gets voters by space ids', async () => {
     const voters = await snapshotRepository.getVoters(SPACE_IDS)
 
-    expect(voters).toBeArray().not.toBeEmpty()
-    voters.forEach((voter) => {
-      expect(voter).toBeString().not.toBeEmpty().toStartWith('0x')
+    expect(voters).toBeObject().not.toBeEmpty()
+    Object.entries(voters).forEach(([snapshotId, voters]) => {
+      expect(snapshotId).toBeString().not.toBeEmpty()
+      expect(voters).toBeInstanceOf(Set)
+      for (const voter of (voters as Set<string>).values()) {
+        expect(voter).toBeString().toStartWith('0x')
+      }
     })
   })
 })

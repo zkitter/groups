@@ -14,7 +14,7 @@ export default interface WhitelistServiceInterface {
     snapshotNames: string[],
   ) => Promise<Array<{ ghName: string; snapshotId: string }>>
 
-  getOrgsWithRepos: ({
+  getOrgsWithReposAndVoters: ({
     maxOrgs,
     minFollowers,
   }: {

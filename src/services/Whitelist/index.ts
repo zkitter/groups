@@ -63,7 +63,7 @@ export class WhitelistService implements WhitelistServiceInterface {
     )
   }
 
-  async getOrgsWithRepos(
+  async getOrgsWithReposAndVoters(
     {
       maxOrgs,
       minFollowers,
@@ -73,7 +73,9 @@ export class WhitelistService implements WhitelistServiceInterface {
     } = { maxOrgs: 100, minFollowers: 10_000 },
   ) {
     const spaces = await this.getSpaces({ maxOrgs, minFollowers })
-    const orgs: Record<string, OrgData> = {}
+    const orgs: Record<string, OrgData> = await this.snapshot.getVoters(
+      Object.keys(spaces),
+    )
 
     await Promise.all(
       split(Object.keys(spaces)).map(async (snapshotNames) => {
@@ -106,7 +108,7 @@ export class WhitelistService implements WhitelistServiceInterface {
   }
 
   async refresh() {
-    const orgs = await this.getOrgsWithRepos()
+    const orgs = await this.getOrgsWithReposAndVoters()
     return this.db.upsertOrgs(Object.values(orgs))
   }
 

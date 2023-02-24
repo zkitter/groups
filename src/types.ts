@@ -14,6 +14,7 @@ export interface OrgData {
   snapshotName: string
   ghName: string
   repos: string[]
+  voters?: string[]
 }
 
 export interface UserData {
@@ -24,3 +25,12 @@ export interface UserData {
 export interface GroupsData {
   belongsToGhContributorsGroup: boolean
 }
+
+export interface VoteResponse {
+  voter: string
+  space: {
+    id: string
+  }
+}
+
+export type Votes = Record<string, Set<string>>

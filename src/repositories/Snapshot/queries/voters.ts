@@ -1,5 +1,5 @@
 export const votersQuery = `
-query Voters($space_in: [String], $created_gte: Int, $created_lte: Int){
+query Voters($space_in: [String!], $created_gte: Int, $created_lte: Int){
   votes (
     where: {
       created_gte: $created_gte
@@ -11,6 +11,9 @@ query Voters($space_in: [String], $created_gte: Int, $created_lte: Int){
     orderDirection: desc
   ) {
     voter
+    space {
+      id
+    }
   }
 }
 `
