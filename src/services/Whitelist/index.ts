@@ -1,3 +1,4 @@
+import { writeFileSync } from 'fs'
 import { Service } from 'typedi'
 import {
   GithubRepository,
@@ -5,7 +6,7 @@ import {
   SnapshotRepository,
 } from 'repositories'
 import { OrgData, Space } from 'types'
-import { filterSpaces, split } from 'utils'
+import { filterSpaces, splitArray } from 'utils'
 import WhitelistServiceInterface from './interface'
 
 @Service()
@@ -78,7 +79,7 @@ export class WhitelistService implements WhitelistServiceInterface {
     )
 
     await Promise.all(
-      split(Object.keys(spaces)).map(async (snapshotNames) => {
+      splitArray(Object.keys(spaces)).map(async (snapshotNames) => {
         const ghOrgs = await this.getGhOrgs(snapshotNames)
 
         await Promise.all(

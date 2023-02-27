@@ -13,10 +13,25 @@ export const notBot = (str: string) => !str.includes('[bot]')
 
 export const parseDate = (date: Date) => date.toISOString().split('.')[0] + 'Z'
 
-export const split = (arr: string[]) => {
+export const splitArray = (arr: string[], chunkSize = CHUNK_SIZE) => {
   const chunks = []
-  for (let i = 0; i < arr.length; i += CHUNK_SIZE) {
-    chunks.push(arr.slice(i, i + CHUNK_SIZE))
+  for (let i = 0; i < arr.length; i += chunkSize) {
+    chunks.push(arr.slice(i, i + chunkSize))
+  }
+  return chunks
+}
+
+export const splitTimestamps = (
+  { since, until }: { since: number; until: number },
+  chunkNumber = 3,
+) => {
+  const chunks = []
+  const diff = until - since
+  const chunkSize = Math.ceil(diff / chunkNumber)
+  for (let i = 0; i < chunkNumber; i++) {
+    const from = since + i * chunkSize
+    const to = from + chunkSize
+    chunks.push([from + Math.min(i, 1), Math.min(to, until)])
   }
   return chunks
 }
