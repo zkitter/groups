@@ -14,8 +14,7 @@ export class WhitelistService implements WhitelistServiceInterface {
     readonly db: MongoRepository,
     readonly gh: GithubRepository,
     readonly snapshot: SnapshotRepository,
-  ) {
-  }
+  ) {}
 
   async getSpaces(
     {
@@ -88,7 +87,10 @@ export class WhitelistService implements WhitelistServiceInterface {
   }
 
   async getWhitelistShort() {
-    return this.getWhitelist('short')
+    return (await this.getWhitelist('short')) as {
+      daos: string[]
+      repos: string[]
+    }
   }
 
   async getWhitelist(format: 'short' | 'long' = 'short') {
@@ -96,21 +98,25 @@ export class WhitelistService implements WhitelistServiceInterface {
     if (format === 'long') {
       return orgs
     } else {
-      return orgs.reduce<{ daos: string[], repos: string[] }>((orgs, { ghName, repos, snapshotId }) => {
-        orgs.daos.push(snapshotId)
-        if (ghName !== null) orgs.repos.push(...repos.map((repo) => `${ghName}/${repo}`))
-        return orgs
-      }, { daos: [], repos: [] })
+      return orgs.reduce<{ daos: string[]; repos: string[] }>(
+        (orgs, { ghName, repos, snapshotId }) => {
+          orgs.daos.push(snapshotId)
+          if (ghName !== null)
+            orgs.repos.push(...repos.map((repo) => `${ghName}/${repo}`))
+          return orgs
+        },
+        { daos: [], repos: [] },
+      )
     }
   }
 
   async getWhitelistedDaos(): Promise<string[]> {
-    const { daos } = (await this.getWhitelist('short') as { daos: string[] })
+    const { daos } = await this.getWhitelistShort()
     return daos
   }
 
   async getWhitelistedRepos(): Promise<string[]> {
-    const { repos } = (await this.getWhitelist('short') as { repos: string[] })
+    const { repos } = await this.getWhitelistShort()
     return repos
   }
 
@@ -122,5 +128,4 @@ export class WhitelistService implements WhitelistServiceInterface {
   async unWhitelist(ghNameOrSnapshotId: string): Promise<any> {
     return Promise.resolve('unimplemented')
   }
-
 }
