@@ -1,4 +1,11 @@
-import { ArraySet, getTime, intersect, minusOneMonth, notBot } from 'utils'
+import {
+  ArraySet,
+  getTime,
+  intersect,
+  minusOneMonth,
+  notBot,
+  split,
+} from 'utils'
 
 describe('utils', () => {
   describe('ArraySet', () => {
@@ -38,6 +45,22 @@ describe('utils', () => {
 
     it('should return false if the two arrays have no element in common', () => {
       expect(intersect(['a', 'b', 'c'], ['d', 'e', 'f'])).toBe(false)
+    })
+
+    it('should return false if one of the arrays is empty', () => {
+      expect(intersect([], ['d', 'e', 'f'])).toBe(false)
+      expect(intersect(['a', 'b', 'c'], [])).toBe(false)
+    })
+  })
+
+  describe('split', () => {
+    it('should return a list of arrays with a given length', () => {
+      const arr = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
+      const chunkSize = 3
+      const chunks = split(arr, chunkSize)
+      chunks.forEach((chunk) =>
+        expect(chunk.length).toBeLessThanOrEqual(chunkSize),
+      )
     })
   })
 })

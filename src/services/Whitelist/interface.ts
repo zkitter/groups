@@ -10,10 +10,6 @@ export default interface WhitelistServiceInterface {
     minFollowers?: number
   }) => Promise<Record<string, Space>>
 
-  getGhOrgs: (
-    snapshotNames: string[],
-  ) => Promise<Array<{ ghName: string; snapshotId: string }>>
-
   getOrgsWithRepos: ({
     maxOrgs,
     minFollowers,
@@ -22,7 +18,13 @@ export default interface WhitelistServiceInterface {
     minFollowers?: number
   }) => Promise<Record<string, OrgData>>
   unWhitelist: (ghNameOrSnapshotId: string) => Promise<Org>
-  getWhitelistShort: () => Promise<string[]>
-  getWhitelist: (format: 'short' | 'long') => Promise<OrgData[] | string[]>
+  getWhitelist: (
+    format: 'short' | 'long',
+  ) => Promise<OrgData[] | { daos: string[]; repos: string[] }>
+  getWhitelistShort: (
+    format: 'short' | 'long',
+  ) => Promise<{ daos: string[]; repos: string[] }>
+  getWhitelistedDaos: () => Promise<string[]>
+  getWhitelistedRepos: () => Promise<string[]>
   refresh: () => Promise<OrgData[]>
 }
