@@ -1,10 +1,10 @@
-import { SpaceResponse } from '../../types'
+import { Space, SpaceGqlResponse } from '../../types'
 
 export default interface SnapshotRepositoryInterface {
-  getSpaces: () => Promise<Record<string, any>>
+  getSpaces: () => Promise<Record<string, Space>>
   getGhNamesBySpaceIds: (
     ids: string[],
-  ) => Promise<SpaceResponse[]>
+  ) => Promise<SpaceGqlResponse[]>
   getVotedSpacesByAddress: (
     { address, since, until }: {
       since: number; until: number; address: string,

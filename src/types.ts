@@ -26,7 +26,13 @@ export interface GroupsData {
   belongsToGhContributorsGroup: boolean
 }
 
-export interface SpaceResponse {
+export interface SpaceRestResponse {
+  followers: number
+  followers_7d?: number
+  name: string
+}
+
+export interface SpaceGqlResponse {
   snapshotId: string
   ghName: string
 }

@@ -1,6 +1,6 @@
 import { Service } from 'typedi'
 import { URLS } from '#'
-import { SpaceResponse, VoteResponse } from '../../types'
+import { Space, SpaceGqlResponse, SpaceRestResponse, VoteResponse } from '../../types'
 import SnapshotRepositoryInterface from './interface'
 import { ghNamesBySpaceIdsQuery, votedSpacesByAddress } from './queries'
 
@@ -28,16 +28,24 @@ export class SnapshotRepository implements SnapshotRepositoryInterface {
   }
 
   async getSpaces(): Promise<
-    Record<string, { name: string; followers?: number; followers_7d?: number }>
+    Record<string, Space>
   > {
     const res = await fetch(URLS.SNAPSHOT_EXPLORE)
-    const { spaces } = await res.json()
-    return spaces
+    const { spaces }: { spaces: SpaceRestResponse[] } = await res.json()
+    return Object.entries(spaces).reduce<Record<string, Space>>(
+      (spaces, [snapshotId, spaceResponse]) => {
+        const space: Space = { followers: spaceResponse.followers, snapshotId, snapshotName: spaceResponse.name }
+        if (spaceResponse.followers_7d !== undefined) {
+          space.followers7d = spaceResponse.followers_7d
+        }
+        spaces[snapshotId] = space
+        return spaces
+      }, {})
   }
 
   async getGhNamesBySpaceIds(
     ids: string[],
-  ): Promise<SpaceResponse[]> {
+  ): Promise<SpaceGqlResponse[]> {
     const { data } = await this.gqlQuery(ghNamesBySpaceIdsQuery, { ids })
     return data?.spaces ?? []
   }

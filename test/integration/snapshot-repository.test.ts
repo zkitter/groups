@@ -12,12 +12,12 @@ describe('SnapshotRepository', () => {
     const spaces = await snapshotRepository.getSpaces()
 
     expect(spaces).toBeObject().not.toBeEmpty()
-    expect(Object.values(spaces)).toBeArray().not.toBeEmpty()
     expect(spaces['opcollective.eth']).toEqual(
       expect.objectContaining({
         followers: expect.any(Number),
-        followers_7d: expect.any(Number),
-        name: expect.any(String),
+        followers7d: expect.any(Number),
+        snapshotId: expect.any(String),
+        snapshotName: expect.any(String),
       }),
     )
   })
