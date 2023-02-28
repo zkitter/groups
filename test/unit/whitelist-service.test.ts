@@ -1,17 +1,19 @@
 import { TestBed } from '@automock/jest'
-import { GithubRepository, SnapshotRepository } from 'repositories'
+import { GithubRepository, MongoRepository, SnapshotRepository } from 'repositories'
 import { WhitelistService } from 'services/Whitelist'
 
 describe('WhitelistService', () => {
   let whitelistService: WhitelistService
   let gh: jest.Mocked<GithubRepository>
   let snapshot: jest.Mocked<SnapshotRepository>
+  let db: jest.Mocked<MongoRepository>
 
   beforeEach(() => {
     const { unit, unitRef } = TestBed.create(WhitelistService).compile()
     whitelistService = unit
     gh = unitRef.get(GithubRepository)
     snapshot = unitRef.get(SnapshotRepository)
+    db = unitRef.get(MongoRepository)
   })
 
   const SPACES = {
@@ -123,6 +125,25 @@ describe('WhitelistService', () => {
         },
       }
     `)
+  })
+
+  describe('whitelist', () => {
+    const ORGS = [
+      { followers: 10, ghName: 'a', repos: ['aa', 'ab'], snapshotId: 'a.eth', snapshotName: 'A' },
+      { followers: 100, ghName: 'b', repos: ['ba', 'bb'], snapshotId: 'b.eth', snapshotName: 'B' },
+    ]
+  it('getWhitelist: should return orgs in long format', async () => {
+    db.findAllWhitelistedOrgs.mockResolvedValueOnce(ORGS)
+    await expect(whitelistService.getWhitelist('long')).resolves.toEqual(ORGS)
+  })
+
+  it('getWhitelist: should return orgs in short format', async () => {
+    db.findAllWhitelistedOrgs.mockResolvedValueOnce(ORGS)
+    await expect(whitelistService.getWhitelist('short')).resolves.toEqual({
+      daos: ['a.eth', 'b.eth'],
+      repos: ['a/aa', 'a/ab', 'b/ba', 'b/bb'],
+    })
+  })
   })
 
   it.todo('unWhitelist')

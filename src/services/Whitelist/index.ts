@@ -14,7 +14,8 @@ export class WhitelistService implements WhitelistServiceInterface {
     readonly db: MongoRepository,
     readonly gh: GithubRepository,
     readonly snapshot: SnapshotRepository,
-  ) {}
+  ) {
+  }
 
   async getSpaces(
     {
@@ -86,19 +87,17 @@ export class WhitelistService implements WhitelistServiceInterface {
     return orgs
   }
 
-  async getWhitelistShort() {
-    const orgs = await this.db.findAllWhitelistedOrgs()
-    return (
-      orgs
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        .map(({ ghName, repos }) => repos.map((repo) => `${ghName}/${repo}`))
-        .flat()
-    )
-  }
-
   async getWhitelist(format: 'short' | 'long' = 'short') {
-    if (format === 'long') return this.db.findAllWhitelistedOrgs()
-    return this.getWhitelistShort()
+    const orgs = await this.db.findAllWhitelistedOrgs()
+    if (format === 'long') {
+      return orgs
+    } else {
+      return orgs.reduce<{ daos: string[], repos: string[] }>((orgs, { ghName, repos, snapshotId }) => {
+        orgs.daos.push(snapshotId)
+        if (ghName !== null) orgs.repos.push(...repos.map((repo) => `${ghName}/${repo}`))
+        return orgs
+      }, { daos: [], repos: [] })
+    }
   }
 
   async refresh() {
