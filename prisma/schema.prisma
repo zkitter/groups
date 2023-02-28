@@ -19,7 +19,7 @@ model User {
 
 model Org {
    id            String    @id @default(auto()) @map("_id") @db.ObjectId
-   ghName        String    @unique
+   ghName        String?    @unique
    followers     Int
    followers7d   Int?
    repos         String[]

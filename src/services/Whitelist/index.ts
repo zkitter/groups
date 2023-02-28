@@ -26,20 +26,10 @@ export class WhitelistService implements WhitelistServiceInterface {
     } = { maxOrgs: 100, minFollowers: 10_000 },
   ) {
     const spaces = await this.snapshot.getSpaces()
-
-    return Object.entries(spaces)
-      .reduce<Space[]>((spaces, [snapshotId, space]) => {
+    return Object.values(spaces)
+      .reduce<Space[]>((spaces, space) => {
         if (filterSpaces(minFollowers)(space)) {
-          const _space = {
-            followers: space.followers as number,
-            snapshotId,
-            snapshotName: space.name,
-          }
-          if (space.followers_7d !== undefined) {
-            // @ts-expect-error
-            _space.followers7d = space.followers_7d
-          }
-          spaces.push(_space)
+          spaces.push(space)
         }
         return spaces
       }, [])
@@ -49,18 +39,6 @@ export class WhitelistService implements WhitelistServiceInterface {
         spaces[space.snapshotId] = space
         return spaces
       }, {})
-  }
-
-  async getGhOrgs(snapshotNames: string[]) {
-    const spaces = await this.snapshot.getGhOrgsBySpaceIds(snapshotNames)
-    return spaces.reduce<Array<{ ghName: string; snapshotId: string }>>(
-      (spaces, space) => {
-        if (typeof space.ghName === 'string')
-          spaces.push({ ghName: space.ghName, snapshotId: space.snapshotId })
-        return spaces
-      },
-      [],
-    )
   }
 
   async getOrgsWithRepos(
@@ -73,18 +51,33 @@ export class WhitelistService implements WhitelistServiceInterface {
     } = { maxOrgs: 100, minFollowers: 10_000 },
   ) {
     const spaces = await this.getSpaces({ maxOrgs, minFollowers })
-    const orgs: Record<string, OrgData> = {}
+    const ghNames = await this.snapshot.getGhNamesBySpaceIds(
+      Object.keys(spaces),
+    )
+    const orgs = Object.entries(spaces).reduce<Record<string, OrgData>>(
+      (orgs, [snapshotId, space]) => {
+        orgs[snapshotId] = {
+          ...space,
+          ghName: ghNames[snapshotId]?.ghName ?? null,
+        }
+        return orgs
+      },
+      {},
+    )
 
     await Promise.all(
-      split(Object.keys(spaces)).map(async (snapshotNames) => {
-        const ghOrgs = await this.getGhOrgs(snapshotNames)
-
+      split<{ ghName: string; snapshotId: string }>(
+        Object.values(orgs).reduce<
+          Array<{ ghName: string; snapshotId: string }>
+        >((ghNames, { ghName, snapshotId }) => {
+          if (ghName !== null) ghNames.push({ ghName, snapshotId })
+          return ghNames
+        }, []),
+      ).map(async (ghNames) => {
         await Promise.all(
-          ghOrgs.map(async ({ ghName, snapshotId }) => {
+          ghNames.map(async ({ ghName, snapshotId }) => {
             const repos = await this.gh.getReposByOrg(ghName)
-            if (repos.length > 0) {
-              orgs[snapshotId] = { ...spaces[snapshotId], ghName, repos }
-            }
+            if (repos.length > 0) orgs[snapshotId].repos = repos
           }),
         )
       }),
@@ -94,15 +87,37 @@ export class WhitelistService implements WhitelistServiceInterface {
   }
 
   async getWhitelistShort() {
-    const orgs = await this.db.findAllWhitelistedOrgs()
-    return orgs
-      .map(({ ghName, repos }) => repos.map((repo) => `${ghName}/${repo}`))
-      .flat()
+    return (await this.getWhitelist('short')) as {
+      daos: string[]
+      repos: string[]
+    }
   }
 
   async getWhitelist(format: 'short' | 'long' = 'short') {
-    if (format === 'long') return this.db.findAllWhitelistedOrgs()
-    return this.getWhitelistShort()
+    const orgs = await this.db.findAllWhitelistedOrgs()
+    if (format === 'long') {
+      return orgs
+    } else {
+      return orgs.reduce<{ daos: string[]; repos: string[] }>(
+        (orgs, { ghName, repos, snapshotId }) => {
+          orgs.daos.push(snapshotId)
+          if (ghName !== null)
+            orgs.repos.push(...repos.map((repo) => `${ghName}/${repo}`))
+          return orgs
+        },
+        { daos: [], repos: [] },
+      )
+    }
+  }
+
+  async getWhitelistedDaos(): Promise<string[]> {
+    const { daos } = await this.getWhitelistShort()
+    return daos
+  }
+
+  async getWhitelistedRepos(): Promise<string[]> {
+    const { repos } = await this.getWhitelistShort()
+    return repos
   }
 
   async refresh() {

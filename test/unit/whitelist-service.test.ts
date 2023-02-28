@@ -1,23 +1,46 @@
 import { TestBed } from '@automock/jest'
-import { GithubRepository, SnapshotRepository } from 'repositories'
+import {
+  GithubRepository,
+  MongoRepository,
+  SnapshotRepository,
+} from 'repositories'
 import { WhitelistService } from 'services/Whitelist'
+
+const ORGS = [
+  {
+    followers: 10,
+    ghName: 'a',
+    repos: ['aa', 'ab'],
+    snapshotId: 'a.eth',
+    snapshotName: 'A',
+  },
+  {
+    followers: 100,
+    ghName: 'b',
+    repos: ['ba', 'bb'],
+    snapshotId: 'b.eth',
+    snapshotName: 'B',
+  },
+]
 
 describe('WhitelistService', () => {
   let whitelistService: WhitelistService
   let gh: jest.Mocked<GithubRepository>
   let snapshot: jest.Mocked<SnapshotRepository>
+  let db: jest.Mocked<MongoRepository>
 
   beforeEach(() => {
     const { unit, unitRef } = TestBed.create(WhitelistService).compile()
     whitelistService = unit
     gh = unitRef.get(GithubRepository)
     snapshot = unitRef.get(SnapshotRepository)
+    db = unitRef.get(MongoRepository)
   })
 
   const SPACES = {
-    'a.eth': { followers: 10_000, name: 'a' },
-    'b.eth': { followers: 100_000, name: 'b' },
-    'c.eth': { followers: 100_000, name: 'c' },
+    'a.eth': { followers: 10_000, snapshotId: 'a.eth', snapshotName: 'a' },
+    'b.eth': { followers: 100_000, snapshotId: 'b.eth', snapshotName: 'b' },
+    'c.eth': { followers: 100_000, snapshotId: 'c.eth', snapshotName: 'c' },
   }
 
   describe('get spaces', () => {
@@ -49,7 +72,7 @@ describe('WhitelistService', () => {
 
     it('getSpaces: returns max maxOrgs spaces with at least minFollowers', async () => {
       snapshot.getSpaces.mockResolvedValueOnce({
-        d: { followers: 1000, name: 'd' },
+        d: { followers: 1000, snapshotId: 'd.eth', snapshotName: 'd' },
         ...SPACES,
       })
 
@@ -71,39 +94,23 @@ describe('WhitelistService', () => {
     })
   })
 
-  it('getGhOrgs: return list of github orgs', async () => {
-    snapshot.getGhOrgsBySpaceIds.mockResolvedValueOnce([
-      { ghName: 'a', snapshotId: 'a.eth' },
-      {
-        ghName: null,
-        snapshotId: 'b.eth',
-      },
-    ])
-
-    await expect(
-      whitelistService.getGhOrgs(['a.eth', 'b.eth']),
-    ).resolves.toEqual([
-      {
-        ghName: 'a',
-        snapshotId: 'a.eth',
-      },
-    ])
-  })
-
-  it('getOrgs: return list of orgs', async () => {
+  it('getOrgsWithRepos: return list of orgs that includes repos', async () => {
     snapshot.getSpaces.mockResolvedValue(SPACES)
-    snapshot.getGhOrgsBySpaceIds.mockResolvedValueOnce([
-      { ghName: 'a', snapshotId: 'a.eth' },
-      {
+    snapshot.getGhNamesBySpaceIds.mockResolvedValueOnce({
+      'a.eth': { ghName: 'a', snapshotId: 'a.eth' },
+      'b.eth': {
         ghName: 'b',
         snapshotId: 'b.eth',
       },
-      { ghName: 'c', snapshotId: 'c.eth' },
-    ])
-    gh.getReposByOrg
-      .mockResolvedValueOnce(['repo-aa', 'repo-ab'])
-      .mockResolvedValueOnce(['repo-ba', 'repo-bb'])
-      .mockResolvedValueOnce(['repo-ca'])
+      'c.eth': { ghName: 'c', snapshotId: 'c.eth' },
+    })
+
+    gh.getReposByOrg.mockImplementation(async (org) => {
+      if (org === 'a') return Promise.resolve(['repo-aa', 'repo-ab'])
+      if (org === 'b') return Promise.resolve(['repo-ba', 'repo-bb'])
+      if (org === 'c') return Promise.resolve(['repo-ca'])
+      return Promise.resolve([])
+    })
 
     await expect(whitelistService.getOrgsWithRepos()).resolves
       .toMatchInlineSnapshot(`
@@ -139,6 +146,39 @@ describe('WhitelistService', () => {
         },
       }
     `)
+  })
+
+  describe('whitelist', () => {
+    it('getWhitelist: should return orgs in long format', async () => {
+      db.findAllWhitelistedOrgs.mockResolvedValueOnce(ORGS)
+      await expect(whitelistService.getWhitelist('long')).resolves.toEqual(ORGS)
+    })
+
+    it('getWhitelist: should return orgs in short format', async () => {
+      db.findAllWhitelistedOrgs.mockResolvedValueOnce(ORGS)
+      await expect(whitelistService.getWhitelist('short')).resolves.toEqual({
+        daos: ['a.eth', 'b.eth'],
+        repos: ['a/aa', 'a/ab', 'b/ba', 'b/bb'],
+      })
+    })
+  })
+
+  it('getWhitelistedDaos: should return list of snapshot ids of the whitelisted orgs', async () => {
+    db.findAllWhitelistedOrgs.mockResolvedValueOnce(ORGS)
+    await expect(whitelistService.getWhitelistedDaos()).resolves.toEqual([
+      'a.eth',
+      'b.eth',
+    ])
+  })
+
+  it('getWhitelistedRepos: should return list of whitelisted repos', async () => {
+    db.findAllWhitelistedOrgs.mockResolvedValueOnce(ORGS)
+    await expect(whitelistService.getWhitelistedRepos()).resolves.toEqual([
+      'a/aa',
+      'a/ab',
+      'b/ba',
+      'b/bb',
+    ])
   })
 
   it.todo('unWhitelist')

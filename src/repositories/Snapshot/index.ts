@@ -1,8 +1,13 @@
 import { Service } from 'typedi'
 import { URLS } from '#'
-import { ArraySet, getTime, minusOneMonth } from 'utils'
+import {
+  Space,
+  SpaceGqlResponse,
+  SpaceRestResponse,
+  VoteResponse,
+} from '../../types'
 import SnapshotRepositoryInterface from './interface'
-import { spacesQuery, votersQuery } from './queries'
+import { ghNamesBySpaceIdsQuery, votedSpacesByAddress } from './queries'
 
 @Service()
 export class SnapshotRepository implements SnapshotRepositoryInterface {
@@ -27,43 +32,59 @@ export class SnapshotRepository implements SnapshotRepositoryInterface {
     return res.json()
   }
 
-  async getSpaces(): Promise<
-    Record<string, { name: string; followers?: number; followers_7d?: number }>
-  > {
+  async getSpaces(): Promise<Record<string, Space>> {
     const res = await fetch(URLS.SNAPSHOT_EXPLORE)
-    const { spaces } = await res.json()
-    return spaces
-  }
-
-  async getGhOrgsBySpaceIds(
-    ids: string[],
-  ): Promise<Array<{ ghName: unknown; snapshotId: string }>> {
-    const { data } = await this.gqlQuery(spacesQuery, { id_in: ids })
-    const spaces = data?.spaces ?? []
-    return (spaces as Array<{ github: string; id: string }>).map(
-      ({ github: ghName, id: snapshotId }) => ({
-        ghName,
-        snapshotId,
-      }),
+    const { spaces }: { spaces: SpaceRestResponse[] } = await res.json()
+    return Object.entries(spaces).reduce<Record<string, Space>>(
+      (spaces, [snapshotId, spaceResponse]) => {
+        const space: Space = {
+          followers: spaceResponse.followers,
+          snapshotId,
+          snapshotName: spaceResponse.name,
+        }
+        if (spaceResponse.followers_7d !== undefined) {
+          space.followers7d = spaceResponse.followers_7d
+        }
+        spaces[snapshotId] = space
+        return spaces
+      },
+      {},
     )
   }
 
-  async getVoters(
+  async getGhNamesBySpaceIds(
     ids: string[],
-    { since, until = new Date(0) }: { since?: Date; until?: Date } = {
-      until: new Date(),
-    },
-  ) {
-    if (since === undefined) since = minusOneMonth(until)
+  ): Promise<Record<string, SpaceGqlResponse>> {
+    const { data } = await this.gqlQuery(ghNamesBySpaceIdsQuery, { ids })
+    return ((data?.spaces ?? []) as SpaceGqlResponse[]).reduce<
+      Record<string, SpaceGqlResponse>
+    >((spaces, { ghName, snapshotId }) => {
+      spaces[snapshotId] = { ghName, snapshotId }
+      return spaces
+    }, {})
+  }
 
-    const { data } = await this.gqlQuery(votersQuery, {
-      created_gte: getTime(since),
-      created_lte: getTime(until),
-      space_in: ids,
+  async getVotedSpacesByAddress({
+    address,
+    since,
+    until,
+  }: {
+    address: string
+    since: number
+    until: number
+  }): Promise<string[]> {
+    const { data } = await this.gqlQuery(votedSpacesByAddress, {
+      address,
+      since,
+      until,
     })
 
-    return ArraySet(
-      (data.votes as Array<{ voter: string }>).map(({ voter }) => voter),
+    return (data.votes ?? ([] as VoteResponse[])).reduce(
+      (snapshotIds: string[], { space: { snapshotId } }: VoteResponse) => {
+        if (!snapshotIds.includes(snapshotId)) snapshotIds.push(snapshotId)
+        return snapshotIds
+      },
+      [],
     )
   }
 }

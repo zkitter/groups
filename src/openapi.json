@@ -2,10 +2,15 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Zkitter Groups - OpenAPI 3.0",
-    "description": "This is a sample Pet Store Server based on the OpenAPI 3.0 specification. \n\n[GitHub](https://github.com/zkitter/groups)",
+    "description": "Whitelisted GitHub and DAOs groups. \n\n[GitHub](https://github.com/zkitter/groups)",
     "license": {
       "name": "MIT",
       "url": "https://github.com/zkitter/groups/blob/main/LICENSE"
+    },
+    "contact": {
+      "name": "r1oga",
+      "url": "https://github.com/r1oga",
+      "email": "me@r1oga.io"
     },
     "version": "1.0.0"
   },
@@ -25,10 +30,14 @@
     {
       "name": "user",
       "description": "GitHub User"
+    },
+    {
+      "name": "membership",
+      "description": "Check belonging to GitHub and/or DAO groups"
     }
   ],
   "paths": {
-    "/user/{username}": {
+    "/gh-user/{ghUsername}": {
       "get": {
         "tags": ["user"],
         "summary": "Get user by GitHub login/username",
@@ -36,7 +45,7 @@
         "operationId": "getUserByGhName",
         "parameters": [
           {
-            "name": "username",
+            "name": "ghUsername",
             "in": "path",
             "description": "The GitHub login that needs to be fetched.",
             "required": true,
@@ -71,7 +80,7 @@
         }
       }
     },
-    "/user/{username}/refresh": {
+    "/gh-user/{ghUsername}/refresh": {
       "get": {
         "tags": ["user"],
         "summary": "Update list of repos the user contributed.",
@@ -79,7 +88,7 @@
         "operationId": "refreshUserByGhName",
         "parameters": [
           {
-            "name": "username",
+            "name": "ghUsername",
             "in": "path",
             "description": "The GitHub login that needs to be refreshed.",
             "required": true,
@@ -124,13 +133,70 @@
         ],
         "responses": {
           "200": {
-            "description": "sucessful operation",
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/OrgLong"
+                      }
+                    },
+                    {
+                      "$ref": "#/components/schemas/OrgShort"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/whitelist/daos": {
+      "get": {
+        "tags": ["whitelist"],
+        "summary": "Get whitelisted DAOs.",
+        "description": "",
+        "operationId": "getWhitelistDaos",
+        "responses": {
+          "200": {
+            "description": "successful operation",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Org"
+                    "description": "Id of the DAO on https://snapshot.org",
+                    "type": "string",
+                    "example": "aave.eth"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/whitelist/repos": {
+      "get": {
+        "tags": ["whitelist"],
+        "summary": "Get whitelisted repos.",
+        "description": "",
+        "operationId": "getWhitelistRepos",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "example": "uniswap/v3-core",
+                    "description": "Github repository name in the format of `org/repo`"
                   }
                 }
               }
@@ -151,7 +217,90 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/User"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrgLong"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/membership/dao-voters/{address}": {
+      "get": {
+        "tags": ["membership"],
+        "summary": "Check if an address belongs to the voters group.",
+        "description": "",
+        "operationId": "belongsToVotersGroup",
+        "parameters": [
+          {
+            "name": "address",
+            "in": "path",
+            "description": "The Ethereum address that needs to be checked.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "belongsToVotersGroup": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  },
+                  "example": {
+                    "belongsToVotersGroup": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/membership/gh-contributors/{ghUsername}": {
+      "get": {
+        "tags": ["membership"],
+        "summary": "Check if an address belongs to the GitHub Contributors group.",
+        "description": "",
+        "operationId": "belongsToGhContributorsGroup",
+        "parameters": [
+          {
+            "name": "ghUsername",
+            "in": "path",
+            "description": "The GitHub username that needs to be checked.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "belongsToGhContributorsGroup": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  },
+                  "example": {
+                    "belongsToGhContributorsGroup": true
+                  }
                 }
               }
             }
@@ -182,7 +331,14 @@
           }
         }
       },
-      "Org": {
+      "OrgLong": {
+        "required": [
+          "followers",
+          "ghName",
+          "repos",
+          "snapshotId",
+          "snapshotName"
+        ],
         "type": "object",
         "properties": {
           "ghName": {
@@ -203,9 +359,30 @@
           },
           "repos": {
             "type": "array",
+            "description": "Array of repositories names that belong to the GitHub organization associated to this snapshot org.",
             "items": {
               "type": "string",
               "example": ["treasure-docs", "treasure-subgraph"]
+            }
+          }
+        }
+      },
+      "OrgShort": {
+        "type": "object",
+        "required": ["daos", "repos"],
+        "properties": {
+          "daos": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": ["stgdao.eth", "aave.eth"]
+            }
+          },
+          "repos": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": ["stargate-protocol/stargate", "aave/aave-v3-core"]
             }
           }
         }

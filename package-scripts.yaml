@@ -58,7 +58,7 @@ scripts:
       script: nps db.gen-schema barrels build start.prod
       description: Start in production mode
     dev:
-      script: tsnd --cls --exit-child --ignore-watch node_modules --quiet  --respawn --rs --transpile-only -r tsconfig-paths/register src
+      script: dotenv -e .env.dev -- tsnd --cls --exit-child --ignore-watch node_modules --quiet  --respawn --rs --transpile-only -r tsconfig-paths/register src
       description: Start in dev mode
     prod:
       script: NODE_ENV=production node -r module-alias/register dist
@@ -77,11 +77,14 @@ scripts:
     once:
       script: dotenv -e .env.test -- jest --config test/jest.config.ts
       description: Run tests (once, coverage)
+    e2e:
+      script: dotenv -e .env.test -- jest --config test/jest.config.ts --selectProjects e2e --coverage=false
+      description: Run e2e tests
     integration:
       script: dotenv -e .env.test -- jest --config test/jest.config.ts --selectProjects integration --coverage=false
       description: Run e2e tests
-    e2e:
-      script: dotenv -e .env.test -- jest --config test/jest.config.ts --selectProjects e2e --coverage=false
+    unit:
+      script: dotenv -e .env.test -- jest --config test/jest.config.ts --selectProjects unit --coverage=false
       description: Run e2e tests
 
   validate:
