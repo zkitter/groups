@@ -6,4 +6,5 @@ Top snapshot organizations as per their number of followers are whitelisted and 
 - the ethereum addresses who participated in of the snapshot vote of one of the whitelisted organization
 
 ## API
+
 See [openapi.json](src/openapi.json) for the full API specification. Or try it [online](https://zkitter-groups.fly.dev/).
