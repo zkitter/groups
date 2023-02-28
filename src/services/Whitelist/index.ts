@@ -1,4 +1,3 @@
-import { writeFileSync } from 'fs'
 import { Service } from 'typedi'
 import {
   GithubRepository,
@@ -6,7 +5,7 @@ import {
   SnapshotRepository,
 } from 'repositories'
 import { OrgData, Space } from 'types'
-import { filterSpaces, splitArray } from 'utils'
+import { filterSpaces, split } from 'utils'
 import WhitelistServiceInterface from './interface'
 
 @Service()
@@ -52,20 +51,30 @@ export class WhitelistService implements WhitelistServiceInterface {
     } = { maxOrgs: 100, minFollowers: 10_000 },
   ) {
     const spaces = await this.getSpaces({ maxOrgs, minFollowers })
-    const orgs: Record<string, OrgData> = await this.snapshot.getVoters(
+    const ghNames = await this.snapshot.getGhNamesBySpaceIds(
       Object.keys(spaces),
+    )
+    const orgs = Object.entries(spaces).reduce<Record<string, OrgData>>(
+      (orgs, [snapshotId, space]) => {
+        orgs[snapshotId] = { ...space, ghName: ghNames[snapshotId].ghName }
+        return orgs
+      },
+      {},
     )
 
     await Promise.all(
-      splitArray(Object.keys(spaces)).map(async (snapshotNames) => {
-        const ghOrgs = await this.getGhOrgs(snapshotNames)
-
+      split<{ ghName: string; snapshotId: string }>(
+        Object.values(orgs).reduce<
+          Array<{ ghName: string; snapshotId: string }>
+        >((ghNames, { ghName, snapshotId }) => {
+          if (ghName !== null) ghNames.push({ ghName, snapshotId })
+          return ghNames
+        }, []),
+      ).map(async (ghNames) => {
         await Promise.all(
-          ghOrgs.map(async ({ ghName, snapshotId }) => {
+          ghNames.map(async ({ ghName, snapshotId }) => {
             const repos = await this.gh.getReposByOrg(ghName)
-            if (repos.length > 0) {
-              orgs[snapshotId] = { ...spaces[snapshotId], ghName, repos }
-            }
+            if (repos.length > 0) orgs[snapshotId].repos = repos
           }),
         )
       }),
@@ -76,9 +85,12 @@ export class WhitelistService implements WhitelistServiceInterface {
 
   async getWhitelistShort() {
     const orgs = await this.db.findAllWhitelistedOrgs()
-    return orgs
-      .map(({ ghName, repos }) => repos.map((repo) => `${ghName}/${repo}`))
-      .flat()
+    return (
+      orgs
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        .map(({ ghName, repos }) => repos.map((repo) => `${ghName}/${repo}`))
+        .flat()
+    )
   }
 
   async getWhitelist(format: 'short' | 'long' = 'short') {
@@ -87,7 +99,7 @@ export class WhitelistService implements WhitelistServiceInterface {
   }
 
   async refresh() {
-    const orgs = await this.getOrgsWithReposAndVoters()
+    const orgs = await this.getOrgsWithRepos()
     return this.db.upsertOrgs(Object.values(orgs))
   }
 
