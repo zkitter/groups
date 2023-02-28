@@ -27,8 +27,14 @@ app.use(
   Router()
     .get('', whitelistController.getWhitelist.bind(whitelistController))
     .get('/refresh', whitelistController.refresh.bind(whitelistController))
-    .get('/daos', whitelistController.getWhitelistedDaos.bind(whitelistController))
-    .get('/repos', whitelistController.getWhitelistedRepos.bind(whitelistController)),
+    .get(
+      '/daos',
+      whitelistController.getWhitelistedDaos.bind(whitelistController),
+    )
+    .get(
+      '/repos',
+      whitelistController.getWhitelistedRepos.bind(whitelistController),
+    ),
 )
 
 app.use(
