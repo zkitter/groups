@@ -10,11 +10,7 @@ export default interface WhitelistServiceInterface {
     minFollowers?: number
   }) => Promise<Record<string, Space>>
 
-  getGhOrgs: (
-    snapshotNames: string[],
-  ) => Promise<Array<{ ghName: string; snapshotId: string }>>
-
-  getOrgsWithReposAndVoters: ({
+  getOrgsWithRepos: ({
     maxOrgs,
     minFollowers,
   }: {

@@ -71,26 +71,7 @@ describe('WhitelistService', () => {
     })
   })
 
-  it('getGhOrgs: return list of github orgs', async () => {
-    snapshot.getGhNamesBySpaceIds.mockResolvedValueOnce([
-      { ghName: 'a', snapshotId: 'a.eth' },
-      {
-        ghName: null,
-        snapshotId: 'b.eth',
-      },
-    ])
-
-    await expect(
-      whitelistService.getGhOrgs(['a.eth', 'b.eth']),
-    ).resolves.toEqual([
-      {
-        ghName: 'a',
-        snapshotId: 'a.eth',
-      },
-    ])
-  })
-
-  it('getOrgsWithReposAndVoters: return list of orgs that includes repos and voters', async () => {
+  it('getOrgsWithRepos: return list of orgs that includes repos', async () => {
     snapshot.getSpaces.mockResolvedValue(SPACES)
     snapshot.getGhNamesBySpaceIds.mockResolvedValueOnce([
       { ghName: 'a', snapshotId: 'a.eth' },

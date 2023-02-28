@@ -42,18 +42,7 @@ export class WhitelistService implements WhitelistServiceInterface {
       }, {})
   }
 
-  async getGhOrgs(snapshotNames: string[]) {
-    const spaces = await this.snapshot.getGhNamesBySpaceIds(snapshotNames)
-    return spaces.reduce<Array<{ ghName: string; snapshotId: string }>>(
-      (spaces, { ghName, snapshotId }) => {
-        if (typeof ghName === 'string') spaces.push({ ghName, snapshotId })
-        return spaces
-      },
-      [],
-    )
-  }
-
-  async getOrgsWithReposAndVoters(
+  async getOrgsWithRepos(
     {
       maxOrgs,
       minFollowers,
