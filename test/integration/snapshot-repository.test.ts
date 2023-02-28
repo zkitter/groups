@@ -23,7 +23,7 @@ describe('SnapshotRepository', () => {
   })
 
   it('gets github orgs by space ids', async () => {
-    const spaces = await snapshotRepository.getGhOrgsBySpaceIds(SPACE_IDS)
+    const spaces = await snapshotRepository.getGhNamesBySpaceIds(SPACE_IDS)
 
     expect(spaces)
       .toBeArray()

@@ -1,10 +1,13 @@
+import { SpaceResponse } from '../../types'
+
 export default interface SnapshotRepositoryInterface {
   getSpaces: () => Promise<Record<string, any>>
-  getGhOrgsBySpaceIds: (
+  getGhNamesBySpaceIds: (
     ids: string[],
-  ) => Promise<Array<{ ghName: unknown; snapshotId: string }>>
-  getVoters: (
-    ids: string[],
-    { since, until }: { since?: Date; until?: Date },
-  ) => Promise<Record<string, string[]>>
+  ) => Promise<SpaceResponse[]>
+  getVotedSpacesByAddress: (
+    { address, since, until }: {
+      since: number; until: number; address: string,
+    },
+  ) => Promise<string[]>
 }

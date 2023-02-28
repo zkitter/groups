@@ -26,6 +26,11 @@ export interface GroupsData {
   belongsToGhContributorsGroup: boolean
 }
 
+export interface SpaceResponse {
+  snapshotId: string
+  ghName: string
+}
+
 export interface VoteResponse {
   voter: string
   space: {

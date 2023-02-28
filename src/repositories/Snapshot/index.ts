@@ -1,9 +1,8 @@
 import { Service } from 'typedi'
 import { URLS } from '#'
-import { getTime, minusOneMonth } from 'utils'
-import { VoteResponse, Votes } from '../../types'
+import { SpaceResponse, VoteResponse } from '../../types'
 import SnapshotRepositoryInterface from './interface'
-import { spacesQuery, votersQuery } from './queries'
+import { ghNamesBySpaceIdsQuery, votedSpacesByAddress } from './queries'
 
 @Service()
 export class SnapshotRepository implements SnapshotRepositoryInterface {
@@ -36,17 +35,11 @@ export class SnapshotRepository implements SnapshotRepositoryInterface {
     return spaces
   }
 
-  async getGhOrgsBySpaceIds(
+  async getGhNamesBySpaceIds(
     ids: string[],
-  ): Promise<Array<{ ghName: unknown; snapshotId: string }>> {
-    const { data } = await this.gqlQuery(spacesQuery, { id_in: ids })
-    const spaces = data?.spaces ?? []
-    return (spaces as Array<{ github: string; id: string }>).map(
-      ({ github: ghName, id: snapshotId }) => ({
-        ghName,
-        snapshotId,
-      }),
-    )
+  ): Promise<SpaceResponse[]> {
+    const { data } = await this.gqlQuery(ghNamesBySpaceIdsQuery, { ids })
+    return data?.spaces ?? []
   }
 
   async getVoters(
