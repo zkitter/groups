@@ -40,16 +40,17 @@ describe('SnapshotRepository', () => {
     })
   })
 
-  it('gets voters by space ids', async () => {
-    const voters = await snapshotRepository.getVoters(SPACE_IDS)
+  it('gets ids of the spaces an address voted to', async () => {
+    const spaceIds = await snapshotRepository.getVotedSpacesByAddress({
+      address: '0x329c54289Ff5D6B7b7daE13592C6B1EDA1543eD4',
+      since: 1674836517,
+      until: 1677514917,
+    })
 
-    expect(voters).toBeObject().not.toBeEmpty()
-    Object.entries(voters).forEach(([snapshotId, voters]) => {
-      expect(snapshotId).toBeString().not.toBeEmpty()
-      expect(voters).toBeInstanceOf(Set)
-      for (const voter of (voters as Set<string>).values()) {
-        expect(voter).toBeString().toStartWith('0x')
-      }
+    expect(spaceIds).toBeArray().not.toBeEmpty()
+    expect(spaceIds).toInclude('aave.eth')
+    spaceIds.forEach((spaceId) => {
+      expect(spaceId).toBeString().not.toBeEmpty()
     })
   })
 })

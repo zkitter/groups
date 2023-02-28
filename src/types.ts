@@ -32,9 +32,8 @@ export interface SpaceResponse {
 }
 
 export interface VoteResponse {
-  voter: string
   space: {
-    id: string
+    snapshotId: string
   }
 }
 

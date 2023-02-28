@@ -42,31 +42,24 @@ export class SnapshotRepository implements SnapshotRepositoryInterface {
     return data?.spaces ?? []
   }
 
-  async getVoters(
-    ids: string[],
-    { since, until = new Date(0) }: { since?: Date; until?: Date } = {
-      until: new Date(),
+  async getVotedSpacesByAddress(
+    { address, since, until }: {
+      address: string,
+      since: number,
+      until: number,
     },
-  ) {
-    if (since === undefined) since = minusOneMonth(until)
+  ): Promise<string[]> {
 
-    const { data } = await this.gqlQuery(votersQuery, {
-      created_gte: getTime(since),
-      created_lte: getTime(until),
-      space_in: ids,
+    const { data } = await this.gqlQuery(votedSpacesByAddress, {
+      address, since, until,
     })
 
     return (data.votes ?? ([] as VoteResponse[])).reduce(
-      (voters: Votes, vote: VoteResponse) => {
-        const {
-          space: { id: snapshotId },
-          voter,
-        } = vote
-        if (voters[snapshotId] === undefined) voters[snapshotId] = new Set()
-        voters[snapshotId].add(voter)
-        return voters
+      (snapshotIds: string[], { space: { snapshotId } }: VoteResponse) => {
+        if (!snapshotIds.includes(snapshotId)) snapshotIds.push(snapshotId)
+        return snapshotIds
       },
-      {},
+      [],
     )
   }
 }
