@@ -2,6 +2,11 @@ import { TestBed } from '@automock/jest'
 import { GithubRepository, MongoRepository, SnapshotRepository } from 'repositories'
 import { WhitelistService } from 'services/Whitelist'
 
+const ORGS = [
+  { followers: 10, ghName: 'a', repos: ['aa', 'ab'], snapshotId: 'a.eth', snapshotName: 'A' },
+  { followers: 100, ghName: 'b', repos: ['ba', 'bb'], snapshotId: 'b.eth', snapshotName: 'B' },
+]
+
 describe('WhitelistService', () => {
   let whitelistService: WhitelistService
   let gh: jest.Mocked<GithubRepository>
@@ -128,22 +133,28 @@ describe('WhitelistService', () => {
   })
 
   describe('whitelist', () => {
-    const ORGS = [
-      { followers: 10, ghName: 'a', repos: ['aa', 'ab'], snapshotId: 'a.eth', snapshotName: 'A' },
-      { followers: 100, ghName: 'b', repos: ['ba', 'bb'], snapshotId: 'b.eth', snapshotName: 'B' },
-    ]
-  it('getWhitelist: should return orgs in long format', async () => {
-    db.findAllWhitelistedOrgs.mockResolvedValueOnce(ORGS)
-    await expect(whitelistService.getWhitelist('long')).resolves.toEqual(ORGS)
-  })
+    it('getWhitelist: should return orgs in long format', async () => {
+      db.findAllWhitelistedOrgs.mockResolvedValueOnce(ORGS)
+      await expect(whitelistService.getWhitelist('long')).resolves.toEqual(ORGS)
+    })
 
-  it('getWhitelist: should return orgs in short format', async () => {
-    db.findAllWhitelistedOrgs.mockResolvedValueOnce(ORGS)
-    await expect(whitelistService.getWhitelist('short')).resolves.toEqual({
-      daos: ['a.eth', 'b.eth'],
-      repos: ['a/aa', 'a/ab', 'b/ba', 'b/bb'],
+    it('getWhitelist: should return orgs in short format', async () => {
+      db.findAllWhitelistedOrgs.mockResolvedValueOnce(ORGS)
+      await expect(whitelistService.getWhitelist('short')).resolves.toEqual({
+        daos: ['a.eth', 'b.eth'],
+        repos: ['a/aa', 'a/ab', 'b/ba', 'b/bb'],
+      })
     })
   })
+
+  it('getWhitelistedDaos: should return list of snapshot ids of the whitelisted orgs', async () => {
+    db.findAllWhitelistedOrgs.mockResolvedValueOnce(ORGS)
+    await expect(whitelistService.getWhitelistedDaos()).resolves.toEqual(['a.eth', 'b.eth'])
+  })
+
+  it('getWhitelistedRepos: should return list of whitelisted repos', async () => {
+    db.findAllWhitelistedOrgs.mockResolvedValueOnce(ORGS)
+    await expect(whitelistService.getWhitelistedRepos()).resolves.toEqual(['a/aa', 'a/ab', 'b/ba', 'b/bb'])
   })
 
   it.todo('unWhitelist')

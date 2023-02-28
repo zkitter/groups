@@ -18,10 +18,12 @@ describe('Whitelist Controller', () => {
 
       expect(whitelistService.getWhitelist).toHaveBeenCalledOnce()
       expect(mongoRepository.findAllWhitelistedOrgs).toHaveBeenCalledOnce()
-      expect(body).toBeInstanceOf(Array)
-      expect(body[faker.datatype.number({ max: body.length - 1, min: 0 })])
-        .toBeString()
-        .not.toBeEmpty()
+      expect(body).toMatchObject({
+        daos: expect.any(Array<string>),
+        repos: expect.any(Array<string>),
+      })
+      expect(body.daos.includes('opcollective.eth')).toBeTrue()
+      expect(body.repos.includes('aave/aave-js')).toBeTrue()
     })
 
     it('can return list of whitelisted orgs in long format', async () => {
@@ -61,6 +63,26 @@ describe('Whitelist Controller', () => {
         (ghName: any) => ghName === null || typeof ghName === 'string',
       )
       expect(org.repos).toBeArray()
+    })
+
+    it('GET /whitelist/daos: should return the list of whitelisted DAOs', async () => {
+      const { body } = await request(app).get('/whitelist/daos').send()
+
+      expect(body).toBeInstanceOf(Array)
+      expect(body[faker.datatype.number({ max: body.length - 1, min: 0 })])
+        .toBeString()
+        .not.toBeEmpty()
+      expect(body.includes('opcollective.eth')).toBeTrue()
+    })
+
+    it('GET /whitelist/repos: should return the list of whitelisted repos', async () => {
+      const { body } = await request(app).get('/whitelist/repos').send()
+
+      expect(body).toBeInstanceOf(Array)
+      expect(body[faker.datatype.number({ max: body.length - 1, min: 0 })])
+        .toBeString()
+        .not.toBeEmpty()
+      expect(body.includes('aave/aave-js')).toBeTrue()
     })
   })
 })

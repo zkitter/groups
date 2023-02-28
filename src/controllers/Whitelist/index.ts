@@ -5,7 +5,8 @@ import WhitelistControllerInterface from './interface'
 
 @Service()
 export class WhitelistController implements WhitelistControllerInterface {
-  constructor(readonly whitelistService: WhitelistService) {}
+  constructor(readonly whitelistService: WhitelistService) {
+  }
 
   async refresh(_: Request, res: Response) {
     const orgs = await this.whitelistService.refresh()
@@ -17,5 +18,15 @@ export class WhitelistController implements WhitelistControllerInterface {
       req.query.format as 'short' | 'long',
     )
     res.json(orgs)
+  }
+
+  async getWhitelistedDaos(_: Request, res: Response): Promise<void> {
+    const daos = await this.whitelistService.getWhitelistedDaos()
+    res.json(daos)
+  }
+
+  async getWhitelistedRepos(_: Request, res: Response): Promise<void> {
+    const repos = await this.whitelistService.getWhitelistedRepos()
+    res.json(repos)
   }
 }

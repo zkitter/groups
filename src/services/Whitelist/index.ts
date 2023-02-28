@@ -87,6 +87,10 @@ export class WhitelistService implements WhitelistServiceInterface {
     return orgs
   }
 
+  async getWhitelistShort() {
+    return this.getWhitelist('short')
+  }
+
   async getWhitelist(format: 'short' | 'long' = 'short') {
     const orgs = await this.db.findAllWhitelistedOrgs()
     if (format === 'long') {
@@ -100,6 +104,16 @@ export class WhitelistService implements WhitelistServiceInterface {
     }
   }
 
+  async getWhitelistedDaos(): Promise<string[]> {
+    const { daos } = (await this.getWhitelist('short') as { daos: string[] })
+    return daos
+  }
+
+  async getWhitelistedRepos(): Promise<string[]> {
+    const { repos } = (await this.getWhitelist('short') as { repos: string[] })
+    return repos
+  }
+
   async refresh() {
     const orgs = await this.getOrgsWithRepos()
     return this.db.upsertOrgs(Object.values(orgs))
@@ -108,4 +122,5 @@ export class WhitelistService implements WhitelistServiceInterface {
   async unWhitelist(ghNameOrSnapshotId: string): Promise<any> {
     return Promise.resolve('unimplemented')
   }
+
 }

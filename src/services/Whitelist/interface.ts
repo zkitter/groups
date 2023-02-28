@@ -19,5 +19,7 @@ export default interface WhitelistServiceInterface {
   }) => Promise<Record<string, OrgData>>
   unWhitelist: (ghNameOrSnapshotId: string) => Promise<Org>
   getWhitelist: (format: 'short' | 'long') => Promise<OrgData[] | { daos: string[], repos: string[] }>
+  getWhitelistedDaos: () => Promise<string[]>
+  getWhitelistedRepos: () => Promise<string[]>
   refresh: () => Promise<OrgData[]>
 }
