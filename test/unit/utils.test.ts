@@ -4,8 +4,7 @@ import {
   intersect,
   minusOneMonth,
   notBot,
-  splitArray,
-  splitTimestamps,
+  split,
 } from 'utils'
 
 describe('utils', () => {
@@ -49,30 +48,14 @@ describe('utils', () => {
     })
   })
 
-  describe('splitArray', () => {
+  describe('split', () => {
     it('should return a list of arrays with a given length', () => {
       const arr = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
       const chunkSize = 3
-      const split = splitArray(arr, chunkSize)
-      split.forEach((chunk) =>
+      const chunks = split(arr, chunkSize)
+      chunks.forEach((chunk) =>
         expect(chunk.length).toBeLessThanOrEqual(chunkSize),
       )
-    })
-  })
-
-  describe('splitTimestamps', () => {
-    it('should return a list of timestamps with a given length', () => {
-      const since = 0
-      const until = 111
-      const chunks = 5
-      const periods = splitTimestamps({ since, until }, chunks)
-      expect(periods.length).toEqual(chunks)
-      for (let i = 0; i < periods.length - 1; i++) {
-        expect(periods[i][0]).toBeLessThanOrEqual(until)
-        expect(periods[i][1]).toBeGreaterThanOrEqual(since)
-        expect(periods[i][0]).toBeLessThan(periods[i][1])
-        expect(periods[i][1]).toEqual(periods[i + 1][0] - 1)
-      }
     })
   })
 })
