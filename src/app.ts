@@ -38,10 +38,19 @@ app.use(
 )
 
 app.use(
-  '/user',
+  '/gh-user',
   Router()
     .get('/:username', userController.getUser.bind(userController))
     .get('/:username/refresh', userController.refresh.bind(userController)),
+)
+
+app.get(
+  '/belongs-to-voters-group/:address',
+  userController.belongsToVotersGroup.bind(userController),
+)
+app.get(
+  '/belongs-to-gh-contributors-group/:ghUsername',
+  userController.belongsToGhContributorsGroup.bind(userController),
 )
 
 export { app }

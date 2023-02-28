@@ -51,13 +51,14 @@ export class UserService implements UserServiceInterface {
   async belongsToVotersGroup(address: string): Promise<boolean> {
     const votedOrgs = await this.getVotedOrgs({ address })
     const { daos } = await this.whitelist.getWhitelistShort()
+    console.log({ address, daos, votedOrgs })
     return intersect(daos, votedOrgs)
   }
 
   async getGhUser(ghName: string, format: 'short' | 'long' = 'short') {
     const user = await this.db.findUser(ghName)
     const belongsToGhContributorsGroup =
-      await this.belongsToGhContributorsGroup(user)
+      user === null ? false : await this.belongsToGhContributorsGroup(user)
     if (format === 'short') return { belongsToGhContributorsGroup }
     return { ...user, belongsToGhContributorsGroup }
   }

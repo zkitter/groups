@@ -46,6 +46,11 @@ describe('utils', () => {
     it('should return false if the two arrays have no element in common', () => {
       expect(intersect(['a', 'b', 'c'], ['d', 'e', 'f'])).toBe(false)
     })
+
+    it('should return false if one of the arrays is empty', () => {
+      expect(intersect([], ['d', 'e', 'f'])).toBe(false)
+      expect(intersect(['a', 'b', 'c'], [])).toBe(false)
+    })
   })
 
   describe('split', () => {

@@ -9,7 +9,7 @@ export class UserController implements UserControllerInterface {
 
   async getUser(req: Request, res: Response) {
     const { username } = req.params
-    const user = await this.userService.getUser(
+    const user = await this.userService.getGhUser(
       username,
       req.query.format as 'short' | 'long',
     )
@@ -20,5 +20,24 @@ export class UserController implements UserControllerInterface {
     const { username } = req.params
     const user = await this.userService.refresh(username)
     res.json(user)
+  }
+
+  async belongsToGhContributorsGroup(
+    req: Request,
+    res: Response,
+  ): Promise<void> {
+    const { ghUsername } = req.params
+    const belongsToGhContributorsGroup = await this.userService.getGhUser(
+      ghUsername,
+    )
+    res.json(belongsToGhContributorsGroup)
+  }
+
+  async belongsToVotersGroup(req: Request, res: Response): Promise<void> {
+    const { address } = req.params
+    const belongsToVotersGroup = await this.userService.belongsToVotersGroup(
+      address,
+    )
+    res.json({ belongsToVotersGroup })
   }
 }
