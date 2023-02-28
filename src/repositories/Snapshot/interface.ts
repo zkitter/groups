@@ -4,7 +4,7 @@ export default interface SnapshotRepositoryInterface {
   getSpaces: () => Promise<Record<string, Space>>
   getGhNamesBySpaceIds: (
     ids: string[],
-  ) => Promise<SpaceGqlResponse[]>
+  ) => Promise<Record<string, SpaceGqlResponse & {ghName: string}>>
   getVotedSpacesByAddress: (
     { address, since, until }: {
       since: number; until: number; address: string,

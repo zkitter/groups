@@ -34,7 +34,7 @@ export interface SpaceRestResponse {
 
 export interface SpaceGqlResponse {
   snapshotId: string
-  ghName: string
+  ghName: string | null
 }
 
 export interface VoteResponse {

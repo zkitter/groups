@@ -45,9 +45,15 @@ export class SnapshotRepository implements SnapshotRepositoryInterface {
 
   async getGhNamesBySpaceIds(
     ids: string[],
-  ): Promise<SpaceGqlResponse[]> {
+  ): Promise<Record<string, SpaceGqlResponse & { ghName: string }>> {
     const { data } = await this.gqlQuery(ghNamesBySpaceIdsQuery, { ids })
-    return data?.spaces ?? []
+    return ((data?.spaces ?? []) as SpaceGqlResponse[]).reduce<Record<string, SpaceGqlResponse & { ghName: string }>>((spaces, {
+      ghName,
+      snapshotId,
+    }) => {
+      if (ghName !== null) spaces[snapshotId] = { ghName, snapshotId }
+      return spaces
+    }, {})
   }
 
   async getVotedSpacesByAddress(
