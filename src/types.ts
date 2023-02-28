@@ -3,8 +3,6 @@ export interface Space {
   followers7d?: number
   snapshotId: string
   snapshotName: string
-  ghName?: string
-  repos?: string[]
 }
 
 export interface OrgData {
@@ -41,5 +39,3 @@ export interface VoteResponse {
     snapshotId: string
   }
 }
-
-export type Votes = Record<string, Set<string>>

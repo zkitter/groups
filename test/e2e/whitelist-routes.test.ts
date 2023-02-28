@@ -1,12 +1,14 @@
+import { faker } from '@faker-js/faker'
 import request from 'supertest'
 import { Container } from 'typedi'
 import { app } from 'app'
 import { MongoRepository } from 'repositories'
 import { WhitelistService } from 'services/Whitelist'
 
-describe('refresh handler', () => {
-  const whitelistService = Container.get(WhitelistService)
-  const mongoRepository = Container.get(MongoRepository)
+const mongoRepository = Container.get(MongoRepository)
+const whitelistService = Container.get(WhitelistService)
+
+describe('Whitelist Controller', () => {
   jest.spyOn(whitelistService, 'getWhitelist')
   jest.spyOn(mongoRepository, 'findAllWhitelistedOrgs')
 
@@ -16,43 +18,49 @@ describe('refresh handler', () => {
 
       expect(whitelistService.getWhitelist).toHaveBeenCalledOnce()
       expect(mongoRepository.findAllWhitelistedOrgs).toHaveBeenCalledOnce()
-      expect(body).toMatchObject({
-        repos: expect.any(Array<string>),
-        voters: expect.any(Array<string>),
-      })
+      expect(body).toBeInstanceOf(Array)
+      expect(body[faker.datatype.number({ max: body.length - 1, min: 0 })])
+        .toBeString()
+        .not.toBeEmpty()
     })
 
     it('can return list of whitelisted orgs in long format', async () => {
       const { body } = await request(app).get('/whitelist?format=long').send()
+      const org = body[faker.datatype.number({ max: body.length - 1, min: 0 })]
 
       expect(whitelistService.getWhitelist).toHaveBeenCalledOnce()
       expect(mongoRepository.findAllWhitelistedOrgs).toHaveBeenCalledOnce()
-      expect(Object.values(body)[0]).toMatchObject({
+      expect(body).toBeInstanceOf(Array)
+      expect(org).toMatchObject({
         followers: expect.any(Number),
-        ghName: expect.any(String),
-        repos: expect.any(Array<string>),
         snapshotId: expect.any(String),
         snapshotName: expect.any(String),
-        voters: expect.any(Array<string>),
       })
+      expect(org.ghName).toSatisfy(
+        (ghName: any) => ghName === null || typeof ghName === 'string',
+      )
+      expect(org.repos).toBeArray()
     })
 
-    it.skip('GET /whitelist/refresh: should update and return the list of whitelisted orgs', async () => {
+    it('GET /whitelist/refresh: should update and return the list of whitelisted orgs', async () => {
       jest.spyOn(whitelistService, 'refresh')
       jest.spyOn(mongoRepository, 'upsertOrgs')
 
       const { body } = await request(app).get('/whitelist/refresh').send()
+      const org = body[faker.datatype.number({ max: body.length - 1, min: 0 })]
 
       expect(whitelistService.refresh).toHaveBeenCalledOnce()
       expect(mongoRepository.upsertOrgs).toHaveBeenCalledOnce()
       expect(body).toBeInstanceOf(Array)
-      expect(body[0]).toMatchObject({
+      expect(org).toMatchObject({
         followers: expect.any(Number),
-        ghName: expect.any(String),
-        repos: expect.any(Array<string>),
         snapshotId: expect.any(String),
         snapshotName: expect.any(String),
       })
+      expect(org.ghName).toSatisfy(
+        (ghName: any) => ghName === null || typeof ghName === 'string',
+      )
+      expect(org.repos).toBeArray()
     })
   })
 })

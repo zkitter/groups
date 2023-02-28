@@ -20,7 +20,7 @@ describe('SnapshotRepository', () => {
     )
   })
 
-  it('gets github orgs by space ids', async () => {
+  it('gets github org names by space ids', async () => {
     const SPACE_IDS = ['stgdao.eth', 'ens.eth', 'aave.eth', 'uniswap']
     const GH_NAMES = ['stargate-protocol', 'ensdomains', 'aave', 'Uniswap']
     const spaces = await snapshotRepository.getGhNamesBySpaceIds(SPACE_IDS)

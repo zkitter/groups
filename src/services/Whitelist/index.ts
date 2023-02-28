@@ -56,7 +56,10 @@ export class WhitelistService implements WhitelistServiceInterface {
     )
     const orgs = Object.entries(spaces).reduce<Record<string, OrgData>>(
       (orgs, [snapshotId, space]) => {
-        orgs[snapshotId] = { ...space, ghName: ghNames[snapshotId].ghName }
+        orgs[snapshotId] = {
+          ...space,
+          ghName: ghNames[snapshotId]?.ghName ?? null,
+        }
         return orgs
       },
       {},
