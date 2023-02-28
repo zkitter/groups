@@ -186,20 +186,6 @@
         "summary": "Get whitelisted repos.",
         "description": "",
         "operationId": "getWhitelistRepos",
-        "parameters": [
-          {
-            "name": "format",
-            "in": "query",
-            "description": "response format",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": ["short", "long"],
-              "example": "long",
-              "default": "short"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "successful operation",
