@@ -12,9 +12,8 @@ export interface OrgData {
   followers7d?: number
   snapshotId: string
   snapshotName: string
-  ghName: string
-  repos: string[]
-  voters?: string[]
+  ghName: string | null // keep or null because optional in Prisma schema
+  repos?: string[]
 }
 
 export interface UserData {

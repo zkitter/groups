@@ -1,6 +1,11 @@
 import { Service } from 'typedi'
 import { URLS } from '#'
-import { Space, SpaceGqlResponse, SpaceRestResponse, VoteResponse } from '../../types'
+import {
+  Space,
+  SpaceGqlResponse,
+  SpaceRestResponse,
+  VoteResponse,
+} from '../../types'
 import SnapshotRepositoryInterface from './interface'
 import { ghNamesBySpaceIdsQuery, votedSpacesByAddress } from './queries'
 
@@ -27,45 +32,51 @@ export class SnapshotRepository implements SnapshotRepositoryInterface {
     return res.json()
   }
 
-  async getSpaces(): Promise<
-    Record<string, Space>
-  > {
+  async getSpaces(): Promise<Record<string, Space>> {
     const res = await fetch(URLS.SNAPSHOT_EXPLORE)
     const { spaces }: { spaces: SpaceRestResponse[] } = await res.json()
     return Object.entries(spaces).reduce<Record<string, Space>>(
       (spaces, [snapshotId, spaceResponse]) => {
-        const space: Space = { followers: spaceResponse.followers, snapshotId, snapshotName: spaceResponse.name }
+        const space: Space = {
+          followers: spaceResponse.followers,
+          snapshotId,
+          snapshotName: spaceResponse.name,
+        }
         if (spaceResponse.followers_7d !== undefined) {
           space.followers7d = spaceResponse.followers_7d
         }
         spaces[snapshotId] = space
         return spaces
-      }, {})
+      },
+      {},
+    )
   }
 
   async getGhNamesBySpaceIds(
     ids: string[],
-  ): Promise<Record<string, SpaceGqlResponse & { ghName: string }>> {
+  ): Promise<Record<string, SpaceGqlResponse>> {
     const { data } = await this.gqlQuery(ghNamesBySpaceIdsQuery, { ids })
-    return ((data?.spaces ?? []) as SpaceGqlResponse[]).reduce<Record<string, SpaceGqlResponse & { ghName: string }>>((spaces, {
-      ghName,
-      snapshotId,
-    }) => {
-      if (ghName !== null) spaces[snapshotId] = { ghName, snapshotId }
+    return ((data?.spaces ?? []) as SpaceGqlResponse[]).reduce<
+      Record<string, SpaceGqlResponse>
+    >((spaces, { ghName, snapshotId }) => {
+      spaces[snapshotId] = { ghName, snapshotId }
       return spaces
     }, {})
   }
 
-  async getVotedSpacesByAddress(
-    { address, since, until }: {
-      address: string,
-      since: number,
-      until: number,
-    },
-  ): Promise<string[]> {
-
+  async getVotedSpacesByAddress({
+    address,
+    since,
+    until,
+  }: {
+    address: string
+    since: number
+    until: number
+  }): Promise<string[]> {
     const { data } = await this.gqlQuery(votedSpacesByAddress, {
-      address, since, until,
+      address,
+      since,
+      until,
     })
 
     return (data.votes ?? ([] as VoteResponse[])).reduce(
