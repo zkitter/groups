@@ -27,20 +27,10 @@ export class WhitelistService implements WhitelistServiceInterface {
     } = { maxOrgs: 100, minFollowers: 10_000 },
   ) {
     const spaces = await this.snapshot.getSpaces()
-
     return Object.entries(spaces)
       .reduce<Space[]>((spaces, [snapshotId, space]) => {
-        if (filterSpaces(minFollowers)(space)) {
-          const _space = {
-            followers: space.followers as number,
-            snapshotId,
-            snapshotName: space.name,
-          }
-          if (space.followers_7d !== undefined) {
-            // @ts-expect-error
-            _space.followers7d = space.followers_7d
-          }
-          spaces.push(_space)
+        if (filterSpaces(minFollowers, snapshotId)(space)) {
+          spaces.push(space)
         }
         return spaces
       }, [])
@@ -53,11 +43,10 @@ export class WhitelistService implements WhitelistServiceInterface {
   }
 
   async getGhOrgs(snapshotNames: string[]) {
-    const spaces = await this.snapshot.getGhOrgsBySpaceIds(snapshotNames)
+    const spaces = await this.snapshot.getGhNamesBySpaceIds(snapshotNames)
     return spaces.reduce<Array<{ ghName: string; snapshotId: string }>>(
-      (spaces, space) => {
-        if (typeof space.ghName === 'string')
-          spaces.push({ ghName: space.ghName, snapshotId: space.snapshotId })
+      (spaces, { ghName, snapshotId }) => {
+        if (typeof ghName === 'string') spaces.push({ ghName, snapshotId })
         return spaces
       },
       [],
