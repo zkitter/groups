@@ -77,11 +77,14 @@ scripts:
     once:
       script: dotenv -e .env.test -- jest --config test/jest.config.ts
       description: Run tests (once, coverage)
+    e2e:
+      script: dotenv -e .env.test -- jest --config test/jest.config.ts --selectProjects e2e --coverage=false
+      description: Run e2e tests
     integration:
       script: dotenv -e .env.test -- jest --config test/jest.config.ts --selectProjects integration --coverage=false
       description: Run e2e tests
-    e2e:
-      script: dotenv -e .env.test -- jest --config test/jest.config.ts --selectProjects e2e --coverage=false
+    unit:
+      script: dotenv -e .env.test -- jest --config test/jest.config.ts --selectProjects unit --coverage=false
       description: Run e2e tests
 
   validate:
