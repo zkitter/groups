@@ -25,6 +25,7 @@ FROM base as release
 
 COPY --from=build /app/prod_node_modules ./node_modules
 COPY --from=build /app/dist ./dist
+COPY public ./public
 
 EXPOSE 3000
 
