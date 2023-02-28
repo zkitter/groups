@@ -27,9 +27,9 @@ export class WhitelistService implements WhitelistServiceInterface {
     } = { maxOrgs: 100, minFollowers: 10_000 },
   ) {
     const spaces = await this.snapshot.getSpaces()
-    return Object.entries(spaces)
-      .reduce<Space[]>((spaces, [snapshotId, space]) => {
-        if (filterSpaces(minFollowers, snapshotId)(space)) {
+    return Object.values(spaces)
+      .reduce<Space[]>((spaces, space) => {
+        if (filterSpaces(minFollowers)(space)) {
           spaces.push(space)
         }
         return spaces

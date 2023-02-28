@@ -14,18 +14,23 @@ export const notBot = (str: string) => !str.includes('[bot]')
 
 export const parseDate = (date: Date) => date.toISOString().split('.')[0] + 'Z'
 
-export const split = (arr: string[], chunkSize = CHUNK_SIZE) => {
-  const chunks = []
+export const split = <T>(arr: T[], chunkSize = CHUNK_SIZE): T[][] => {
+  const chunks: T[][] = []
   for (let i = 0; i < arr.length; i += chunkSize) {
     chunks.push(arr.slice(i, i + chunkSize))
   }
   return chunks
 }
 
+const isIncluded = (ignoreList: string[]) => (str?: string) =>
+  str === undefined ? true : !ignoreList.includes(str)
+
 export const filterSpaces =
   (minFollowers: number) =>
-  ({ followers }: any) =>
-    followers !== undefined && followers >= minFollowers
+  ({ followers, snapshotId }: any) =>
+    followers !== undefined &&
+    followers >= minFollowers &&
+    isIncluded(IGNORE_SPACES)(snapshotId)
 
 const validations = [
   body('maxOrgs').if(body('maxOrgs').exists()).isInt(),
