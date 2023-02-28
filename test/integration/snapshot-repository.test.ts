@@ -1,6 +1,5 @@
 import { SnapshotRepository } from 'repositories'
 
-
 describe('SnapshotRepository', () => {
   let snapshotRepository: SnapshotRepository
   beforeEach(() => {
@@ -26,11 +25,17 @@ describe('SnapshotRepository', () => {
     const GH_NAMES = ['stargate-protocol', 'ensdomains', 'aave', 'Uniswap']
     const spaces = await snapshotRepository.getGhNamesBySpaceIds(SPACE_IDS)
 
-    expect(spaces)
-      .toMatchObject(Object.fromEntries(SPACE_IDS.map((snapshotId, i) => [snapshotId, {
-        ghName: GH_NAMES[i],
-        snapshotId,
-      }])))
+    expect(spaces).toMatchObject(
+      Object.fromEntries(
+        SPACE_IDS.map((snapshotId, i) => [
+          snapshotId,
+          {
+            ghName: GH_NAMES[i],
+            snapshotId,
+          },
+        ]),
+      ),
+    )
   })
 
   it('gets ids of the spaces an address voted to', async () => {

@@ -15,9 +15,9 @@ describe('WhitelistService', () => {
   })
 
   const SPACES = {
-    'a.eth': { followers: 10_000, name: 'a' },
-    'b.eth': { followers: 100_000, name: 'b' },
-    'c.eth': { followers: 100_000, name: 'c' },
+    'a.eth': { followers: 10_000, snapshotId: 'a.eth', snapshotName: 'a' },
+    'b.eth': { followers: 100_000, snapshotId: 'b.eth', snapshotName: 'b' },
+    'c.eth': { followers: 100_000, snapshotId: 'c.eth', snapshotName: 'c' },
   }
 
   describe('get spaces', () => {
@@ -49,7 +49,7 @@ describe('WhitelistService', () => {
 
     it('getSpaces: returns max maxOrgs spaces with at least minFollowers', async () => {
       snapshot.getSpaces.mockResolvedValueOnce({
-        d: { followers: 1000, name: 'd' },
+        d: { followers: 1000, snapshotId: 'd.eth', snapshotName: 'd' },
         ...SPACES,
       })
 
@@ -73,22 +73,21 @@ describe('WhitelistService', () => {
 
   it('getOrgsWithRepos: return list of orgs that includes repos', async () => {
     snapshot.getSpaces.mockResolvedValue(SPACES)
-    snapshot.getGhNamesBySpaceIds.mockResolvedValueOnce([
-      { ghName: 'a', snapshotId: 'a.eth' },
-      {
+    snapshot.getGhNamesBySpaceIds.mockResolvedValueOnce({
+      'a.eth': { ghName: 'a', snapshotId: 'a.eth' },
+      'b.eth': {
         ghName: 'b',
         snapshotId: 'b.eth',
       },
-      { ghName: 'c', snapshotId: 'c.eth' },
-    ])
-    snapshot.getVotedSpacesByAddress.mockResolvedValueOnce({
-      'a.eth': ['0xfoo1', '0xfoo2'],
-      'b.eth': ['0xbar'],
+      'c.eth': { ghName: 'c', snapshotId: 'c.eth' },
     })
-    gh.getReposByOrg
-      .mockResolvedValueOnce(['repo-aa', 'repo-ab'])
-      .mockResolvedValueOnce(['repo-ba', 'repo-bb'])
-      .mockResolvedValueOnce(['repo-ca'])
+
+    gh.getReposByOrg.mockImplementation(async (org) => {
+      if (org === 'a') return Promise.resolve(['repo-aa', 'repo-ab'])
+      if (org === 'b') return Promise.resolve(['repo-ba', 'repo-bb'])
+      if (org === 'c') return Promise.resolve(['repo-ca'])
+      return Promise.resolve([])
+    })
 
     await expect(whitelistService.getOrgsWithRepos()).resolves
       .toMatchInlineSnapshot(`
