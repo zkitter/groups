@@ -8,17 +8,17 @@ export class UserController implements UserControllerInterface {
   constructor(readonly userService: UserService) {}
 
   async getUser(req: Request, res: Response) {
-    const { username } = req.params
+    const { ghUsername } = req.params
     const user = await this.userService.getGhUser(
-      username,
+      ghUsername,
       req.query.format as 'short' | 'long',
     )
     res.json(user)
   }
 
   async refresh(req: Request, res: Response) {
-    const { username } = req.params
-    const user = await this.userService.refresh(username)
+    const { ghUsername } = req.params
+    const user = await this.userService.refresh(ghUsername)
     res.json(user)
   }
 

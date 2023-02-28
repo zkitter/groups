@@ -4,6 +4,9 @@ import { app } from 'app'
 import { MongoRepository } from 'repositories'
 import { UserService } from 'services'
 
+// beforeAll(async () => {
+//
+// })
 describe('UserController', () => {
   const userService = Container.get(UserService)
   const mongoRepository = Container.get(MongoRepository)
@@ -48,11 +51,11 @@ describe('UserController', () => {
     })
   })
 
-  describe('GET /belongs-to-gh-contributors-group/:gh_username', () => {
+  describe('GET /membership/gh-contributors/:gh_username', () => {
     it('returns true if user belongs to the GH contributors group', async () => {
       await request(app).get('/gh-user/NoahZinsmeister/refresh').send()
       const { body } = await request(app)
-        .get('/belongs-to-gh-contributors-group/NoahZinsmeister')
+        .get('/membership/gh-contributors/NoahZinsmeister')
         .send()
 
       expect(body).toEqual({ belongsToGhContributorsGroup: true })
@@ -60,18 +63,18 @@ describe('UserController', () => {
 
     it('returns false if user does not belong to the GH contributors group', async () => {
       const { body } = await request(app)
-        .get('/belongs-to-gh-contributors-group/r1oga')
+        .get('/membership/gh-contributors/r1oga')
         .send()
 
       expect(body).toEqual({ belongsToGhContributorsGroup: false })
     })
   })
 
-  describe('GET /belongs-to-voters-group/:address', () => {
+  describe('GET /membership/voters/:address', () => {
     it('returns false if user does not belongs to the voters group', async () => {
       const { body } = await request(app)
         .get(
-          '/belongs-to-voters-group/0xF411903cbC70a74d22900a5DE66A2dda66507255',
+          '/membership/dao-voters/0xF411903cbC70a74d22900a5DE66A2dda66507255',
         )
         .send()
 
@@ -81,7 +84,7 @@ describe('UserController', () => {
     it('returns true if user belongs to the voters group', async () => {
       const { body } = await request(app)
         .get(
-          '/belongs-to-voters-group/0x329c54289Ff5D6B7b7daE13592C6B1EDA1543eD4',
+          '/membership/dao-voters/0x329c54289Ff5D6B7b7daE13592C6B1EDA1543eD4',
         ) // aavechan.eth
         .send()
 

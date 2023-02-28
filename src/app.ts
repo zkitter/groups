@@ -40,17 +40,21 @@ app.use(
 app.use(
   '/gh-user',
   Router()
-    .get('/:username', userController.getUser.bind(userController))
-    .get('/:username/refresh', userController.refresh.bind(userController)),
+    .get('/:ghUsername', userController.getUser.bind(userController))
+    .get('/:ghUsername/refresh', userController.refresh.bind(userController)),
 )
 
-app.get(
-  '/belongs-to-voters-group/:address',
-  userController.belongsToVotersGroup.bind(userController),
-)
-app.get(
-  '/belongs-to-gh-contributors-group/:ghUsername',
-  userController.belongsToGhContributorsGroup.bind(userController),
+app.use(
+  '/membership',
+  Router()
+    .get(
+      '/dao-voters/:address',
+      userController.belongsToVotersGroup.bind(userController),
+    )
+    .get(
+      '/gh-contributors/:ghUsername',
+      userController.belongsToGhContributorsGroup.bind(userController),
+    ),
 )
 
 export { app }
