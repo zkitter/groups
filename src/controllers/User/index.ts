@@ -1,5 +1,5 @@
-import { Request, Response } from 'express'
-import { Service } from 'typedi'
+import { Request, Response, Router } from 'express'
+import { Container, Service } from 'typedi'
 import { UserService } from 'services/User'
 import UserControllerInterface from './interface'
 
@@ -41,3 +41,18 @@ export class UserController implements UserControllerInterface {
     res.json({ belongsToVotersGroup })
   }
 }
+
+const userController = Container.get(UserController)
+export const userRouter = Router()
+  .get('/:ghUsername', userController.getUser.bind(userController))
+  .get('/:ghUsername/refresh', userController.refresh.bind(userController))
+
+export const membershipRouter = Router()
+  .get(
+    '/dao-voters/:address',
+    userController.belongsToVotersGroup.bind(userController),
+  )
+  .get(
+    '/gh-contributors/:ghUsername',
+    userController.belongsToGhContributorsGroup.bind(userController),
+  )
