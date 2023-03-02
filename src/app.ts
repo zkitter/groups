@@ -3,8 +3,8 @@ import cors from 'cors'
 import express, { Express, Router } from 'express'
 import swaggerUi from 'swagger-ui-express'
 import { Container } from 'typedi'
+import openApiSpecs from '../public/openapi.json'
 import { UserController, WhitelistController } from './controllers'
-import openApiSpecs from './openapi.json'
 
 const app: Express = express()
 const whitelistController = Container.get(WhitelistController)
@@ -12,14 +12,18 @@ const userController = Container.get(UserController)
 
 app.use(cors())
 
-app.use(express.static('public'))
-app.use('/', swaggerUi.serve)
-app.get(
-  '/',
-  swaggerUi.setup(openApiSpecs, {
-    customfavIcon: '/favicon.ico',
-    customSiteTitle: 'Zkitter Groups API',
-  }),
+app.use('/public', express.static('public'))
+app.use('/api-docs', express.static('public/openapi.json'))
+app.use(
+  '/api-docs/ui',
+  swaggerUi.serve,
+  Router().get(
+    '',
+    swaggerUi.setup(openApiSpecs, {
+      customfavIcon: '/favicon.ico',
+      customSiteTitle: 'Zkitter Groups API',
+    }),
+  ),
 )
 
 app.use(
