@@ -8,16 +8,17 @@ WORKDIR app
 
 COPY .npmrc package.json pnpm-lock.yaml ./
 COPY package-scripts.yaml ./
+COPY public ./public
 
 FROM base as build
 
-COPY prisma prisma
+COPY prisma ./prisma
 RUN pnpm install --frozen-lockfile --prod
 RUN cp -R node_modules prod_node_modules
 
 RUN pnpm i --frozen-lockfile
 
-COPY src src
+COPY src ./src
 COPY .barrelsby.json tsconfig.json tsconfig.compile.json ./
 RUN pnpm run nps barrels compile
 
@@ -25,7 +26,6 @@ FROM base as release
 
 COPY --from=build /app/prod_node_modules ./node_modules
 COPY --from=build /app/dist ./dist
-COPY public ./public
 
 EXPOSE 3000
 

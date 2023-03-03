@@ -1,60 +1,23 @@
 import 'express-async-errors'
 import cors from 'cors'
-import express, { Express, Router } from 'express'
-import swaggerUi from 'swagger-ui-express'
-import { Container } from 'typedi'
-import { UserController, WhitelistController } from './controllers'
-import openApiSpecs from './openapi.json'
+import express, { Express } from 'express'
+import favicon from 'serve-favicon'
+import {
+  apiDocsRouter,
+  membershipRouter,
+  userRouter,
+  whitelistRouter,
+} from './controllers'
 
 const app: Express = express()
-const whitelistController = Container.get(WhitelistController)
-const userController = Container.get(UserController)
-
-app.use(cors())
-
-app.use(express.static('public'))
-app.use('/', swaggerUi.serve)
-app.get(
-  '/',
-  swaggerUi.setup(openApiSpecs, {
-    customfavIcon: '/favicon.ico',
-    customSiteTitle: 'Zkitter Groups API',
-  }),
-)
-
-app.use(
-  '/whitelist',
-  Router()
-    .get('', whitelistController.getWhitelist.bind(whitelistController))
-    .get('/refresh', whitelistController.refresh.bind(whitelistController))
-    .get(
-      '/daos',
-      whitelistController.getWhitelistedDaos.bind(whitelistController),
-    )
-    .get(
-      '/repos',
-      whitelistController.getWhitelistedRepos.bind(whitelistController),
-    ),
-)
-
-app.use(
-  '/gh-user',
-  Router()
-    .get('/:ghUsername', userController.getUser.bind(userController))
-    .get('/:ghUsername/refresh', userController.refresh.bind(userController)),
-)
-
-app.use(
-  '/membership',
-  Router()
-    .get(
-      '/dao-voters/:address',
-      userController.belongsToVotersGroup.bind(userController),
-    )
-    .get(
-      '/gh-contributors/:ghUsername',
-      userController.belongsToGhContributorsGroup.bind(userController),
-    ),
-)
+  .use([cors(), favicon('public/favicon.ico')])
+  .use('/public', express.static('public'))
+  .get('/', (_, res) => {
+    res.redirect('/api-docs/ui')
+  })
+  .use('/api-docs', apiDocsRouter)
+  .use('/whitelist', whitelistRouter)
+  .use('/gh-user', userRouter)
+  .use('/membership', membershipRouter)
 
 export { app }

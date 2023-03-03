@@ -1,5 +1,5 @@
-import { Request, Response } from 'express'
-import { Service } from 'typedi'
+import { Request, Response, Router } from 'express'
+import { Container, Service } from 'typedi'
 import { WhitelistService } from 'services/Whitelist'
 import WhitelistControllerInterface from './interface'
 
@@ -29,3 +29,16 @@ export class WhitelistController implements WhitelistControllerInterface {
     res.json(repos)
   }
 }
+
+const whitelistController = Container.get(WhitelistController)
+export const whitelistRouter: Router = Router()
+  .get('', whitelistController.getWhitelist.bind(whitelistController))
+  .get('/refresh', whitelistController.refresh.bind(whitelistController))
+  .get(
+    '/daos',
+    whitelistController.getWhitelistedDaos.bind(whitelistController),
+  )
+  .get(
+    '/repos',
+    whitelistController.getWhitelistedRepos.bind(whitelistController),
+  )
