@@ -51,7 +51,6 @@ export class UserService implements UserServiceInterface {
   async belongsToVotersGroup(address: string): Promise<boolean> {
     const votedOrgs = await this.getVotedOrgs({ address })
     const { daos } = await this.whitelist.getWhitelistShort()
-    console.log({ address, daos, votedOrgs })
     return intersect(daos, votedOrgs)
   }
 

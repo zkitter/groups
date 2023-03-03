@@ -4,8 +4,12 @@ scripts:
     hiddenFromHelp: true
 
   build:
-    script: nps clean db.gen-schema barrels compile
-    description: Build project
+    db:
+      script: pnpx prisma generate
+      hiddenFromHelp: true
+    default:
+      script: nps clean build.db barrels compile
+      description: Build project
 
   clean:
     script: rm -rf dist
@@ -14,11 +18,6 @@ scripts:
   compile:
     script: tsc -p tsconfig.compile.json
     hiddenFromHelp: true
-
-  db:
-    gen-schema:
-      script: pnpx prisma generate
-      hiddenFromHelp: true
 
   fix:
     default:
@@ -55,7 +54,7 @@ scripts:
 
   start:
     default:
-      script: nps db.gen-schema barrels build start.prod
+      script: nps build start.prod
       description: Start in production mode
     dev:
       script: dotenv -e .env.dev -- tsnd --cls --exit-child --ignore-watch node_modules --quiet  --respawn --rs --transpile-only -r tsconfig-paths/register src

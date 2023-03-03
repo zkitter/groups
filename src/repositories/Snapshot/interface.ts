@@ -1,4 +1,4 @@
-import { Space, SpaceGqlResponse } from '../../types'
+import { Space, SpaceGqlResponse } from 'types'
 
 export default interface SnapshotRepositoryInterface {
   getSpaces: () => Promise<Record<string, Space>>

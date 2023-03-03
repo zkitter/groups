@@ -1,4 +1,4 @@
-import { GroupsData, UserData } from '../../types'
+import { GroupsData, UserData } from 'types'
 
 export default interface UserServiceInterface {
   getContributedRepos: (username: string) => Promise<string[]>

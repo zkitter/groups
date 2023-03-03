@@ -1,13 +1,6 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": [
-    "test",
-    "src/daos",
-    "src/gh",
-    "src/service",
-    "src/snapshot",
-    "scripts"
-  ],
+  "exclude": ["test"],
   "compilerOptions": {
     "noEmit": false,
     "outDir": "dist",

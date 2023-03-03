@@ -1,6 +1,6 @@
 import 'express-async-errors'
 import cors from 'cors'
-import express from 'express'
+import express, { Express } from 'express'
 import favicon from 'serve-favicon'
 import {
   apiDocsRouter,
@@ -9,7 +9,7 @@ import {
   whitelistRouter,
 } from './controllers'
 
-const app = express()
+const app: Express = express()
   .use([cors(), favicon('public/favicon.ico')])
   .use('/public', express.static('public'))
   .get('/', (_, res) => {
