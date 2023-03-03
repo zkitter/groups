@@ -1,10 +1,10 @@
 import { Router } from 'express'
 import swaggerUi from 'swagger-ui-express'
-import openApiSpecs from '../../public/openapi.json'
+import openApiSpecs from './openapi.json'
 
-export const apiDocsRouter = Router()
+export const apiDocsRouter: Router = Router()
   .get('', (_, res) => {
-    res.sendFile('public/openapi.json', { root: '.' })
+    res.sendFile('openapi.json', { root: '.' })
   })
   .use(
     '/ui',

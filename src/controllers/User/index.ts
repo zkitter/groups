@@ -43,11 +43,11 @@ export class UserController implements UserControllerInterface {
 }
 
 const userController = Container.get(UserController)
-export const userRouter = Router()
+export const userRouter: Router = Router()
   .get('/:ghUsername', userController.getUser.bind(userController))
   .get('/:ghUsername/refresh', userController.refresh.bind(userController))
 
-export const membershipRouter = Router()
+export const membershipRouter: Router = Router()
   .get(
     '/dao-voters/:address',
     userController.belongsToVotersGroup.bind(userController),

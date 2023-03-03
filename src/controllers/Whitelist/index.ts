@@ -31,7 +31,7 @@ export class WhitelistController implements WhitelistControllerInterface {
 }
 
 const whitelistController = Container.get(WhitelistController)
-export const whitelistRouter = Router()
+export const whitelistRouter: Router = Router()
   .get('', whitelistController.getWhitelist.bind(whitelistController))
   .get('/refresh', whitelistController.refresh.bind(whitelistController))
   .get(
